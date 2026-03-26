@@ -37,9 +37,35 @@ for (const method of ['log', 'info', 'warn', 'error', 'debug'] as const) {
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
+// Test connection lazily or via health check
 const adapter = NeonAdapter(pool);
 
 export const app = new Hono();
+
+app.get('/api/health-db', async (c) => {
+  console.log('[Health] Checking DB connection...');
+  const start = Date.now();
+  try {
+    const result = await pool.query('SELECT NOW()');
+    return c.json({ 
+      status: 'ok', 
+      time: `${Date.now() - start}ms`, 
+      serverTime: result.rows[0].now,
+      env: {
+        has_db_url: !!process.env.DATABASE_URL,
+        db_url_prefix: process.env.DATABASE_URL?.split(':')[0]
+      }
+    });
+  } catch (err: any) {
+    console.error('[Health] DB error:', err);
+    return c.json({ 
+      status: 'error', 
+      error: err.message, 
+      stack: err.stack,
+      time: `${Date.now() - start}ms` 
+    }, 500);
+  }
+});
 
 app.use('*', requestId());
 
