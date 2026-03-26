@@ -14,10 +14,10 @@ import { requestId } from 'hono/request-id';
 import { createHonoServer } from 'react-router-hono-server/aws-lambda';
 import { serializeError } from 'serialize-error';
 import ws from 'ws';
-import NeonAdapter from './adapter';
-import { getHTMLForErrorPage } from './get-html-for-error-page';
-import { isAuthAction } from './is-auth-action';
-import { API_BASENAME, api } from './route-builder';
+import NeonAdapter from './adapter.js';
+import { getHTMLForErrorPage } from './get-html-for-error-page.js';
+import { isAuthAction } from './is-auth-action.js';
+import { API_BASENAME, api } from './route-builder.js';
 neonConfig.webSocketConstructor = ws;
 
 const als = new AsyncLocalStorage<{ requestId: string }>();
@@ -253,4 +253,5 @@ app.route(API_BASENAME, api);
 export default await createHonoServer({
   app,
   defaultLogger: false,
+  invokeMode: 'default',
 });

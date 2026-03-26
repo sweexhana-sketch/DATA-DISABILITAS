@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Hono } from 'hono';
 import type { Handler } from 'hono/types';
-import updatedFetch from '../src/__create/fetch';
+import updatedFetch from '../src/__create/fetch.js';
 
 const API_BASENAME = '/api';
 const api = new Hono();
@@ -91,6 +91,7 @@ async function registerRoutes() {
             const honoPath = `/${parts.map(({ pattern }) => pattern).join('/')}`;
             const handler: Handler = async (c) => {
               const params = c.req.param();
+              // @ts-ignore
               if (import.meta.env.DEV) {
                 const updatedRoute = await import(
                   /* @vite-ignore */ `${routeFile}?update=${Date.now()}`
@@ -135,11 +136,15 @@ async function registerRoutes() {
 await registerRoutes();
 
 // Hot reload routes in development
+// @ts-ignore
 if (import.meta.env.DEV) {
+  // @ts-ignore
   import.meta.glob('../src/app/api/**/route.js', {
     eager: true,
   });
+  // @ts-ignore
   if (import.meta.hot) {
+    // @ts-ignore
     import.meta.hot.accept((newSelf) => {
       registerRoutes().catch((err) => {
         console.error('Error reloading routes:', err);
