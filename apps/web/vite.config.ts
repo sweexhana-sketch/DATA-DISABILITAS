@@ -77,6 +77,9 @@ export default defineConfig({
     },
     dedupe: ['react', 'react-dom'],
   },
+  ssr: {
+    noExternal: ['react-router-hono-server'],
+  },
   clearScreen: false,
   server: {
     allowedHosts: true,
