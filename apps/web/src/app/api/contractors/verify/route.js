@@ -1,5 +1,5 @@
-import sql from "@/app/api/utils/sql";
-import { auth } from "@/auth";
+import sql from "../../../../app/api/utils/sql";
+import { auth } from "../../../../auth";
 
 // Verifikasi/Approve atau Reject kontraktor (Admin only)
 export async function POST(request) {

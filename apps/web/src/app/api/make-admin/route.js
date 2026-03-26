@@ -1,5 +1,5 @@
-import sql from "@/app/api/utils/sql";
-import { auth } from "@/auth";
+import sql from "../../../app/api/utils/sql";
+import { auth } from "../../../auth";
 
 // Endpoint untuk membuat user pertama menjadi admin
 // PENTING: Hapus endpoint ini setelah admin pertama dibuat!

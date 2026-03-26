@@ -1,3 +1,4 @@
+import { readdir, stat } from 'node:fs/promises';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Hono } from 'hono';
@@ -13,6 +14,33 @@ if (globalThis.fetch) {
   globalThis.fetch = updatedFetch;
 }
 
+// Recursively find all route.js files
+async function findRouteFiles(dir: string): Promise<string[]> {
+  const files = await readdir(dir);
+  let routes: string[] = [];
+
+  for (const file of files) {
+    try {
+      const filePath = join(dir, file);
+      const statResult = await stat(filePath);
+
+      if (statResult.isDirectory()) {
+        routes = routes.concat(await findRouteFiles(filePath));
+      } else if (file === 'route.js') {
+        // Handle root route.js specially
+        if (filePath === join(__dirname, 'route.js')) {
+          routes.unshift(filePath); // Add to beginning of array
+        } else {
+          routes.push(filePath);
+        }
+      }
+    } catch (error) {
+      console.error(`Error reading file ${file}:`, error);
+    }
+  }
+
+  return routes;
+}
 
 // Helper function to transform file path to Hono route path
 function getHonoPath(routeFile: string): { name: string; pattern: string }[] {
@@ -35,46 +63,48 @@ function getHonoPath(routeFile: string): { name: string; pattern: string }[] {
   return transformedParts;
 }
 
-// Import all routes using Vite's glob import
-// This ensures they are bundled and aliases are resolved at build time
-// @ts-ignore
-const routeModules = import.meta.glob('../src/app/api/**/route.{js,ts}', {
-  eager: true,
-});
-
 // Import and register all routes
 async function registerRoutes() {
+  const routeFiles = (
+    await findRouteFiles(__dirname).catch((error) => {
+      console.error('Error finding route files:', error);
+      return [];
+    })
+  )
+    .slice()
+    .sort((a, b) => {
+      return b.length - a.length;
+    });
+
   // Clear existing routes
   api.routes = [];
 
-  const sortedFiles = Object.keys(routeModules).sort((a, b) => b.length - a.length);
-
-  for (const file of sortedFiles) {
+  for (const routeFile of routeFiles) {
     try {
-      const route = routeModules[file] as any;
-      const absolutePath = join(__dirname, file.replace('../src/app/api', ''));
-      
+      // Use standard import() which Node understands
+      const route = await import(/* @vite-ignore */ `${routeFile}?update=${Date.now()}`);
+
       const methods = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'];
       for (const method of methods) {
-        if (route[method]) {
-          // Calculate path relative to the api directory
-          const parts = getHonoPath(join(__dirname, file.replace('../src/app/api', '')));
-          const honoPath = `/${parts.map(({ pattern }) => pattern).join('/')}`;
-          
-          const handler: Handler = async (c) => {
-            const params = c.req.param();
-            // In dev, we might want to re-import, but for now we use the bundled version
-            return await route[method](c.req.raw, { params });
-          };
-
-          const methodLowercase = method.toLowerCase();
-          if ((api as any)[methodLowercase]) {
-            (api as any)[methodLowercase](honoPath, handler);
+        try {
+          if (route[method]) {
+            const parts = getHonoPath(routeFile);
+            const honoPath = `/${parts.map(({ pattern }) => pattern).join('/')}`;
+            const handler: Handler = async (c) => {
+              const params = c.req.param();
+              return await route[method](c.req.raw, { params });
+            };
+            const methodLowercase = method.toLowerCase();
+            if ((api as any)[methodLowercase]) {
+              (api as any)[methodLowercase](honoPath, handler);
+            }
           }
+        } catch (error) {
+          console.error(`Error registering route ${routeFile} for method ${method}:`, error);
         }
       }
     } catch (error) {
-      console.error(`Error registering route ${file}:`, error);
+      console.error(`Error importing route file ${routeFile}:`, error);
     }
   }
 }
@@ -87,9 +117,9 @@ await registerRoutes();
 if (typeof import.meta !== 'undefined' && import.meta.hot) {
   // @ts-ignore
   import.meta.hot.accept((newSelf) => {
-    // With eager glob, we might need a different reload strategy, 
-    // but this is mostly for production fix now.
-    console.log('HMR for routes triggered');
+    registerRoutes().catch((err) => {
+      console.error('Error reloading routes:', err);
+    });
   });
 }
 

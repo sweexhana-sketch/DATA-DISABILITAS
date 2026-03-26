@@ -40,8 +40,8 @@ if (globalThis.window && globalThis.window !== undefined) {
   globalThis.window.fetch = fetch;
 }
 
-const LoadFontsSSR = import.meta.env.SSR ? LoadFonts : null;
-if (import.meta.hot) {
+const LoadFontsSSR = typeof import.meta.env !== 'undefined' && import.meta.env.SSR ? LoadFonts : null;
+if (typeof import.meta.hot !== 'undefined') {
   import.meta.hot.on('update-font-links', (urls: string[]) => {
     // remove old font links
     for (const link of document.querySelectorAll('link[data-auto-font]')) {
@@ -277,11 +277,11 @@ export const ClientOnly: React.FC<ClientOnlyProps> = ({ loader }) => {
  * Works only in dev; in prod it always returns `true`.
  */
 export function useHmrConnection(): boolean {
-  const [connected, setConnected] = useState(() => !!import.meta.hot);
+  const [connected, setConnected] = useState(() => typeof import.meta.hot !== 'undefined');
 
   useEffect(() => {
     // No HMR object outside dev builds
-    if (!import.meta.hot) return;
+    if (typeof import.meta.hot === 'undefined') return;
 
     /** Fired the moment the WS closes unexpectedly */
     const onDisconnect = () => setConnected(false);

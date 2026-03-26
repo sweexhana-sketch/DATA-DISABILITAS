@@ -1,5 +1,5 @@
-import sql from "@/app/api/utils/sql";
-import { auth } from "@/auth";
+import sql from "../../../../app/api/utils/sql";
+import { auth } from "../../../../auth";
 
 // Mendapatkan profil kontraktor dari user yang sedang login
 export async function GET(request) {
