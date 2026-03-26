@@ -4,7 +4,7 @@ import { skipCSRFCheck } from '@auth/core';
 import Credentials from '@auth/core/providers/credentials';
 import { authHandler, initAuthConfig } from '@hono/auth-js';
 import { Pool, neonConfig } from '@neondatabase/serverless';
-import { hash, verify } from 'argon2';
+import bcrypt from 'bcryptjs';
 import { Hono } from 'hono';
 import { contextStorage, getContext } from 'hono/context-storage';
 import { cors } from 'hono/cors';
@@ -212,7 +212,7 @@ const authConfig = initAuthConfig((c) => ({
           );
           const accountPassword = matchingAccount?.password;
           if (!accountPassword) return null;
-          const isValid = await verify(accountPassword, password as string);
+          const isValid = await bcrypt.compare(password as string, accountPassword);
           return isValid ? user : null;
         } catch (err) {
           console.error('[Authorize] Signin error:', err);
@@ -248,7 +248,7 @@ const authConfig = initAuthConfig((c) => ({
             console.log(`[Authorize] Creating account for user: ${newUser.id}`);
             await adapter.linkAccount({
               extraData: {
-                password: await hash(password as string),
+                password: await bcrypt.hash(password as string, 10),
               },
               type: 'credentials',
               userId: newUser.id,
