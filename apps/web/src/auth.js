@@ -358,4 +358,5 @@ export const { auth } = CreateAuth({
     signOut: '/account/logout',
     error: '/account/error',
   },
+  basePath: '/api/auth',
 })

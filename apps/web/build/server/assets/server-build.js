@@ -969,6 +969,7 @@ function SignInPage() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const {
     signInWithCredentials
   } = useAuth();
@@ -982,12 +983,18 @@ function SignInPage() {
       return;
     }
     try {
-      await signInWithCredentials({
+      const result = await signInWithCredentials({
         email,
         password,
         callbackUrl: "/dashboard",
-        redirect: true
+        redirect: false
       });
+      if (result?.error) {
+        setError("Email atau password salah. Silakan coba lagi.");
+        setLoading(false);
+      } else {
+        window.location.href = "/dashboard";
+      }
     } catch (err) {
       setError("Email atau password salah. Silakan coba lagi.");
       setLoading(false);
@@ -995,50 +1002,50 @@ function SignInPage() {
   };
   return /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
     className: "flex min-h-screen w-full items-center justify-center bg-[#F7F9FC]",
-    renderId: "render-6eecd604",
+    renderId: "render-fffaa247",
     as: "div",
     children: /* @__PURE__ */ jsxs(CreatePolymorphicComponent, {
       noValidate: true,
       onSubmit,
       className: "w-full max-w-md rounded bg-white p-8 border border-[#E4E9F2]",
-      renderId: "render-ae9f9452",
+      renderId: "render-ecf06b03",
       as: "form",
       children: [/* @__PURE__ */ jsxs(CreatePolymorphicComponent, {
         className: "mb-6 text-center",
-        renderId: "render-686b5abc",
+        renderId: "render-ad75bb17",
         as: "div",
         children: [/* @__PURE__ */ jsx(CreatePolymorphicComponent, {
           className: "flex justify-center mb-6",
-          renderId: "render-9ea05f73",
+          renderId: "render-4b8143b0",
           as: "div",
           children: /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
             src: "/logo-pbd.png",
             alt: "Logo Papua Barat Daya",
             className: "w-24 h-24 object-contain",
-            renderId: "render-669ea862",
+            renderId: "render-a3edac77",
             as: "img"
           })
         }), /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
           className: "text-2xl font-bold text-[#2A2E45] mb-2",
-          renderId: "render-15894e61",
+          renderId: "render-158ddf4b",
           as: "h1",
           children: "Masuk ke Sistem"
         }), /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
           className: "text-sm text-[#8A8FA6]",
-          renderId: "render-41a6c7fb",
+          renderId: "render-3bfed0a6",
           as: "p",
           children: "DINSOS & PPPA Papua Barat Daya"
         })]
       }), /* @__PURE__ */ jsxs(CreatePolymorphicComponent, {
         className: "space-y-4",
-        renderId: "render-736cfbfe",
+        renderId: "render-566e189b",
         as: "div",
         children: [/* @__PURE__ */ jsxs(CreatePolymorphicComponent, {
-          renderId: "render-158ddf4b",
+          renderId: "render-9d468d0c",
           as: "div",
           children: [/* @__PURE__ */ jsx(CreatePolymorphicComponent, {
             className: "block text-sm font-medium text-[#2A2E45] mb-2",
-            renderId: "render-b3aa36df",
+            renderId: "render-e9922172",
             as: "label",
             children: "Email"
           }), /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
@@ -1049,48 +1056,96 @@ function SignInPage() {
             onChange: (e) => setEmail(e.target.value),
             placeholder: "Masukkan email Anda",
             className: "w-full h-10 px-3 border border-[#E4E9F2] rounded text-sm focus:outline-none focus:ring-2 focus:ring-[#1570FF]",
-            renderId: "render-5e030167",
-            as: "input"
-          })]
-        }), /* @__PURE__ */ jsxs(CreatePolymorphicComponent, {
-          renderId: "render-9d468d0c",
-          as: "div",
-          children: [/* @__PURE__ */ jsx(CreatePolymorphicComponent, {
-            className: "block text-sm font-medium text-[#2A2E45] mb-2",
-            renderId: "render-e9922172",
-            as: "label",
-            children: "Password"
-          }), /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
-            required: true,
-            name: "password",
-            type: "password",
-            value: password,
-            onChange: (e) => setPassword(e.target.value),
-            className: "w-full h-10 px-3 border border-[#E4E9F2] rounded text-sm focus:outline-none focus:ring-2 focus:ring-[#1570FF]",
-            placeholder: "Masukkan password Anda",
             renderId: "render-468b1585",
             as: "input"
           })]
+        }), /* @__PURE__ */ jsxs(CreatePolymorphicComponent, {
+          renderId: "render-254e876f",
+          as: "div",
+          children: [/* @__PURE__ */ jsx(CreatePolymorphicComponent, {
+            className: "block text-sm font-medium text-[#2A2E45] mb-2",
+            renderId: "render-9d88142e",
+            as: "label",
+            children: "Password"
+          }), /* @__PURE__ */ jsxs(CreatePolymorphicComponent, {
+            className: "relative",
+            renderId: "render-33b923b4",
+            as: "div",
+            children: [/* @__PURE__ */ jsx(CreatePolymorphicComponent, {
+              required: true,
+              name: "password",
+              type: showPassword ? "text" : "password",
+              value: password,
+              onChange: (e) => setPassword(e.target.value),
+              className: "w-full h-10 px-3 pr-10 border border-[#E4E9F2] rounded text-sm focus:outline-none focus:ring-2 focus:ring-[#1570FF]",
+              placeholder: "Masukkan password Anda",
+              renderId: "render-333e85e2",
+              as: "input"
+            }), /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
+              type: "button",
+              onClick: () => setShowPassword(!showPassword),
+              className: "absolute inset-y-0 right-0 flex items-center px-3 text-[#8A8FA6] hover:text-[#2A2E45]",
+              tabIndex: -1,
+              renderId: "render-13a57d39",
+              as: "button",
+              children: showPassword ? /* @__PURE__ */ jsx("svg", {
+                xmlns: "http://www.w3.org/2000/svg",
+                className: "w-5 h-5",
+                fill: "none",
+                viewBox: "0 0 24 24",
+                stroke: "currentColor",
+                children: /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
+                  strokeLinecap: "round",
+                  strokeLinejoin: "round",
+                  strokeWidth: 2,
+                  d: "M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21",
+                  renderId: "render-55d7b1d7",
+                  as: "path"
+                })
+              }) : /* @__PURE__ */ jsxs("svg", {
+                xmlns: "http://www.w3.org/2000/svg",
+                className: "w-5 h-5",
+                fill: "none",
+                viewBox: "0 0 24 24",
+                stroke: "currentColor",
+                children: [/* @__PURE__ */ jsx(CreatePolymorphicComponent, {
+                  strokeLinecap: "round",
+                  strokeLinejoin: "round",
+                  strokeWidth: 2,
+                  d: "M15 12a3 3 0 11-6 0 3 3 0 016 0z",
+                  renderId: "render-61759e17",
+                  as: "path"
+                }), /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
+                  strokeLinecap: "round",
+                  strokeLinejoin: "round",
+                  strokeWidth: 2,
+                  d: "M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z",
+                  renderId: "render-d42b2ea5",
+                  as: "path"
+                })]
+              })
+            })]
+          })]
         }), error && /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
           className: "rounded bg-red-50 p-3 text-sm text-red-500",
-          renderId: "render-2dd5e85c",
+          renderId: "render-5307bdd8",
           as: "div",
           children: error
         }), /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
           type: "submit",
           disabled: loading,
           className: "w-full h-10 bg-[#1570FF] text-white rounded text-sm font-semibold hover:bg-[#0F5FE6] disabled:opacity-50",
-          renderId: "render-d56c60d7",
+          renderId: "render-999e5d51",
           as: "button",
           children: loading ? "Memuat..." : "Masuk"
         }), /* @__PURE__ */ jsxs(CreatePolymorphicComponent, {
           className: "text-center text-sm text-[#8A8FA6]",
-          renderId: "render-10758bb4",
+          renderId: "render-a151badc",
           as: "p",
           children: ["Belum punya akun?", " ", /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
             href: "/account/signup",
             className: "text-[#1570FF] hover:text-[#0F5FE6] font-semibold",
-            renderId: "render-648ffab2",
+            renderId: "render-11fdf84d",
             as: "a",
             children: "Daftar"
           })]
@@ -1119,6 +1174,8 @@ function SignUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const {
     signUpWithCredentials
   } = useAuth();
@@ -1142,63 +1199,107 @@ function SignUpPage() {
       return;
     }
     try {
-      await signUpWithCredentials({
+      const result = await signUpWithCredentials({
         email,
         password,
         callbackUrl: "/dashboard",
-        redirect: true
+        redirect: false
       });
+      if (result?.error) {
+        setError("Email sudah terdaftar atau terjadi kesalahan. Silakan coba lagi.");
+        setLoading(false);
+      } else {
+        window.location.href = "/dashboard";
+      }
     } catch (err) {
       setError("Email sudah terdaftar atau terjadi kesalahan. Silakan coba lagi.");
       setLoading(false);
     }
   };
+  const EyeIcon = ({
+    visible
+  }) => visible ? /* @__PURE__ */ jsx("svg", {
+    xmlns: "http://www.w3.org/2000/svg",
+    className: "w-5 h-5",
+    fill: "none",
+    viewBox: "0 0 24 24",
+    stroke: "currentColor",
+    children: /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      strokeWidth: 2,
+      d: "M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21",
+      renderId: "render-ecd68a43",
+      as: "path"
+    })
+  }) : /* @__PURE__ */ jsxs("svg", {
+    xmlns: "http://www.w3.org/2000/svg",
+    className: "w-5 h-5",
+    fill: "none",
+    viewBox: "0 0 24 24",
+    stroke: "currentColor",
+    children: [/* @__PURE__ */ jsx(CreatePolymorphicComponent, {
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      strokeWidth: 2,
+      d: "M15 12a3 3 0 11-6 0 3 3 0 016 0z",
+      renderId: "render-3bae7952",
+      as: "path"
+    }), /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      strokeWidth: 2,
+      d: "M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z",
+      renderId: "render-a4728b44",
+      as: "path"
+    })]
+  });
   return /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
     className: "flex min-h-screen w-full items-center justify-center bg-[#F7F9FC]",
-    renderId: "render-462bc59f",
+    renderId: "render-04ac6fef",
     as: "div",
     children: /* @__PURE__ */ jsxs(CreatePolymorphicComponent, {
       noValidate: true,
       onSubmit,
       className: "w-full max-w-md rounded bg-white p-8 border border-[#E4E9F2]",
-      renderId: "render-6802fb1f",
+      renderId: "render-e977d911",
       as: "form",
       children: [/* @__PURE__ */ jsxs(CreatePolymorphicComponent, {
         className: "mb-6 text-center",
-        renderId: "render-361af737",
+        renderId: "render-5bfe8c39",
         as: "div",
         children: [/* @__PURE__ */ jsx(CreatePolymorphicComponent, {
           className: "flex justify-center mb-6",
-          renderId: "render-8bdb1498",
+          renderId: "render-00d9e5e2",
           as: "div",
           children: /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
             src: "/logo-pbd.png",
             alt: "Logo Papua Barat Daya",
             className: "w-24 h-24 object-contain",
-            renderId: "render-03204f80",
+            renderId: "render-13c293c9",
             as: "img"
           })
         }), /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
           className: "text-2xl font-bold text-[#2A2E45] mb-2",
-          renderId: "render-617575ad",
+          renderId: "render-83f6feab",
           as: "h1",
           children: "Daftar Akun Baru"
         }), /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
           className: "text-sm text-[#8A8FA6]",
-          renderId: "render-6c686685",
+          renderId: "render-eff02860",
           as: "p",
           children: "DINSOS & PPPA Papua Barat Daya"
         })]
       }), /* @__PURE__ */ jsxs(CreatePolymorphicComponent, {
         className: "space-y-4",
-        renderId: "render-8a7722bc",
+        renderId: "render-73bfe0b1",
         as: "div",
         children: [/* @__PURE__ */ jsxs(CreatePolymorphicComponent, {
-          renderId: "render-cdf48d88",
+          renderId: "render-4aeea52f",
           as: "div",
           children: [/* @__PURE__ */ jsx(CreatePolymorphicComponent, {
             className: "block text-sm font-medium text-[#2A2E45] mb-2",
-            renderId: "render-a9b6b821",
+            renderId: "render-bbc2dc48",
             as: "label",
             children: "Email"
           }), /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
@@ -1209,67 +1310,97 @@ function SignUpPage() {
             onChange: (e) => setEmail(e.target.value),
             placeholder: "Masukkan email Anda",
             className: "w-full h-10 px-3 border border-[#E4E9F2] rounded text-sm focus:outline-none focus:ring-2 focus:ring-[#1570FF]",
-            renderId: "render-5836c611",
+            renderId: "render-344e5e83",
             as: "input"
           })]
         }), /* @__PURE__ */ jsxs(CreatePolymorphicComponent, {
-          renderId: "render-294d8514",
+          renderId: "render-b4b155d6",
           as: "div",
           children: [/* @__PURE__ */ jsx(CreatePolymorphicComponent, {
             className: "block text-sm font-medium text-[#2A2E45] mb-2",
-            renderId: "render-ff0cda82",
+            renderId: "render-7bb8dc87",
             as: "label",
             children: "Password"
-          }), /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
-            required: true,
-            name: "password",
-            type: "password",
-            value: password,
-            onChange: (e) => setPassword(e.target.value),
-            className: "w-full h-10 px-3 border border-[#E4E9F2] rounded text-sm focus:outline-none focus:ring-2 focus:ring-[#1570FF]",
-            placeholder: "Minimal 6 karakter",
-            renderId: "render-4a8357f5",
-            as: "input"
+          }), /* @__PURE__ */ jsxs(CreatePolymorphicComponent, {
+            className: "relative",
+            renderId: "render-ad4189f9",
+            as: "div",
+            children: [/* @__PURE__ */ jsx(CreatePolymorphicComponent, {
+              required: true,
+              name: "password",
+              type: showPassword ? "text" : "password",
+              value: password,
+              onChange: (e) => setPassword(e.target.value),
+              className: "w-full h-10 px-3 pr-10 border border-[#E4E9F2] rounded text-sm focus:outline-none focus:ring-2 focus:ring-[#1570FF]",
+              placeholder: "Minimal 6 karakter",
+              renderId: "render-5b674bc4",
+              as: "input"
+            }), /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
+              type: "button",
+              onClick: () => setShowPassword(!showPassword),
+              className: "absolute inset-y-0 right-0 flex items-center px-3 text-[#8A8FA6] hover:text-[#2A2E45]",
+              tabIndex: -1,
+              renderId: "render-c2fabb05",
+              as: "button",
+              children: /* @__PURE__ */ jsx(EyeIcon, {
+                visible: showPassword
+              })
+            })]
           })]
         }), /* @__PURE__ */ jsxs(CreatePolymorphicComponent, {
-          renderId: "render-f205b8db",
+          renderId: "render-df677764",
           as: "div",
           children: [/* @__PURE__ */ jsx(CreatePolymorphicComponent, {
             className: "block text-sm font-medium text-[#2A2E45] mb-2",
-            renderId: "render-38a853f8",
+            renderId: "render-41a04fa4",
             as: "label",
             children: "Konfirmasi Password"
-          }), /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
-            required: true,
-            name: "confirmPassword",
-            type: "password",
-            value: confirmPassword,
-            onChange: (e) => setConfirmPassword(e.target.value),
-            className: "w-full h-10 px-3 border border-[#E4E9F2] rounded text-sm focus:outline-none focus:ring-2 focus:ring-[#1570FF]",
-            placeholder: "Ulangi password Anda",
-            renderId: "render-6bd6135e",
-            as: "input"
+          }), /* @__PURE__ */ jsxs(CreatePolymorphicComponent, {
+            className: "relative",
+            renderId: "render-603a8beb",
+            as: "div",
+            children: [/* @__PURE__ */ jsx(CreatePolymorphicComponent, {
+              required: true,
+              name: "confirmPassword",
+              type: showConfirm ? "text" : "password",
+              value: confirmPassword,
+              onChange: (e) => setConfirmPassword(e.target.value),
+              className: "w-full h-10 px-3 pr-10 border border-[#E4E9F2] rounded text-sm focus:outline-none focus:ring-2 focus:ring-[#1570FF]",
+              placeholder: "Ulangi password Anda",
+              renderId: "render-0cfc0ddc",
+              as: "input"
+            }), /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
+              type: "button",
+              onClick: () => setShowConfirm(!showConfirm),
+              className: "absolute inset-y-0 right-0 flex items-center px-3 text-[#8A8FA6] hover:text-[#2A2E45]",
+              tabIndex: -1,
+              renderId: "render-20f203db",
+              as: "button",
+              children: /* @__PURE__ */ jsx(EyeIcon, {
+                visible: showConfirm
+              })
+            })]
           })]
         }), error && /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
           className: "rounded bg-red-50 p-3 text-sm text-red-500",
-          renderId: "render-9ba4fe82",
+          renderId: "render-429d893e",
           as: "div",
           children: error
         }), /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
           type: "submit",
           disabled: loading,
           className: "w-full h-10 bg-[#1570FF] text-white rounded text-sm font-semibold hover:bg-[#0F5FE6] disabled:opacity-50",
-          renderId: "render-965a5cfc",
+          renderId: "render-16ffd626",
           as: "button",
           children: loading ? "Memuat..." : "Daftar"
         }), /* @__PURE__ */ jsxs(CreatePolymorphicComponent, {
           className: "text-center text-sm text-[#8A8FA6]",
-          renderId: "render-8c2404dc",
+          renderId: "render-c5a3e883",
           as: "p",
           children: ["Sudah punya akun?", " ", /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
             href: "/account/signin",
             className: "text-[#1570FF] hover:text-[#0F5FE6] font-semibold",
-            renderId: "render-ce206763",
+            renderId: "render-2e2e09a6",
             as: "a",
             children: "Masuk"
           })]
@@ -5405,7 +5536,7 @@ const route15 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   loader
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const serverManifest = {'entry':{'module':'/assets/entry.client-DrwnpP4j.js','imports':['/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/index-DpBzRyJG.js'],'css':[]},'routes':{'root':{'id':'root','parentId':undefined,'path':'','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/root-BmqpvwSl.js','imports':['/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/index-DpBzRyJG.js','/assets/with-props-4S6yQdI1.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/react-EfX2AG1E.js','/assets/clsx-DBz8XMeR.js'],'css':['/assets/root-B_C7VXNK.css'],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'page':{'id':'page','parentId':'root','path':undefined,'index':true,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-BZXCj1IN.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'account/error/page':{'id':'account/error/page','parentId':'root','path':'account/error','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-BYHJWcdd.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'account/logout/page':{'id':'account/logout/page','parentId':'root','path':'account/logout','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-Dqw6MC1g.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/useAuth-WmJQllxo.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'account/signin/page':{'id':'account/signin/page','parentId':'root','path':'account/signin','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-Dwp-yeXE.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/useAuth-WmJQllxo.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'account/signup/page':{'id':'account/signup/page','parentId':'root','path':'account/signup','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-Cm6ZYPiS.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/useAuth-WmJQllxo.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'admin/contractors/page':{'id':'admin/contractors/page','parentId':'root','path':'admin/contractors','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-CIbqykSf.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/arrow-left-CTxr7-rm.js','/assets/search-S2o-xw2I.js','/assets/clock-BK95Y1o_.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'admin/contractors/[id]/page':{'id':'admin/contractors/[id]/page','parentId':'root','path':'admin/contractors/:id','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-Ccswmbwt.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/arrow-left-CTxr7-rm.js','/assets/clock-BK95Y1o_.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'admin/dashboard/page':{'id':'admin/dashboard/page','parentId':'root','path':'admin/dashboard','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-CKvnbDoL.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/arrow-left-CTxr7-rm.js','/assets/users-DyuJ5mRr.js','/assets/clock-BK95Y1o_.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'admin/make-first-admin/page':{'id':'admin/make-first-admin/page','parentId':'root','path':'admin/make-first-admin','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-D8wwXBd5.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'contractor/profile/page':{'id':'contractor/profile/page','parentId':'root','path':'contractor/profile','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-Q5KeLYfY.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/arrow-left-CTxr7-rm.js','/assets/clock-BK95Y1o_.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'contractor/register/page':{'id':'contractor/register/page','parentId':'root','path':'contractor/register','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-DsBiioA9.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/arrow-left-CTxr7-rm.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'daftar-data/page':{'id':'daftar-data/page','parentId':'root','path':'daftar-data','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-CjugZVUp.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/search-S2o-xw2I.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'dashboard/page':{'id':'dashboard/page','parentId':'root','path':'dashboard','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-C9hEspUM.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/users-DyuJ5mRr.js','/assets/clsx-DBz8XMeR.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'tambah-data/page':{'id':'tambah-data/page','parentId':'root','path':'tambah-data','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page--CtOXAgz.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'__create/not-found':{'id':'__create/not-found','parentId':'root','path':'*?','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':true,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/not-found-CBo472Ju.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined}},'url':'/assets/manifest-8fb48677.js','version':'8fb48677','sri':undefined};
+const serverManifest = {'entry':{'module':'/assets/entry.client-DrwnpP4j.js','imports':['/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/index-DpBzRyJG.js'],'css':[]},'routes':{'root':{'id':'root','parentId':undefined,'path':'','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/root-tW2l3ChJ.js','imports':['/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/index-DpBzRyJG.js','/assets/with-props-4S6yQdI1.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/react-EfX2AG1E.js','/assets/clsx-DBz8XMeR.js'],'css':['/assets/root-BRXsp2XP.css'],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'page':{'id':'page','parentId':'root','path':undefined,'index':true,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-BZXCj1IN.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'account/error/page':{'id':'account/error/page','parentId':'root','path':'account/error','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-BYHJWcdd.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'account/logout/page':{'id':'account/logout/page','parentId':'root','path':'account/logout','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-Dqw6MC1g.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/useAuth-WmJQllxo.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'account/signin/page':{'id':'account/signin/page','parentId':'root','path':'account/signin','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-DLa-jT1k.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/useAuth-WmJQllxo.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'account/signup/page':{'id':'account/signup/page','parentId':'root','path':'account/signup','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-CjjesgIt.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/useAuth-WmJQllxo.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'admin/contractors/page':{'id':'admin/contractors/page','parentId':'root','path':'admin/contractors','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-CIbqykSf.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/arrow-left-CTxr7-rm.js','/assets/search-S2o-xw2I.js','/assets/clock-BK95Y1o_.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'admin/contractors/[id]/page':{'id':'admin/contractors/[id]/page','parentId':'root','path':'admin/contractors/:id','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-Ccswmbwt.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/arrow-left-CTxr7-rm.js','/assets/clock-BK95Y1o_.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'admin/dashboard/page':{'id':'admin/dashboard/page','parentId':'root','path':'admin/dashboard','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-CKvnbDoL.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/arrow-left-CTxr7-rm.js','/assets/users-DyuJ5mRr.js','/assets/clock-BK95Y1o_.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'admin/make-first-admin/page':{'id':'admin/make-first-admin/page','parentId':'root','path':'admin/make-first-admin','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-D8wwXBd5.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'contractor/profile/page':{'id':'contractor/profile/page','parentId':'root','path':'contractor/profile','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-Q5KeLYfY.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/arrow-left-CTxr7-rm.js','/assets/clock-BK95Y1o_.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'contractor/register/page':{'id':'contractor/register/page','parentId':'root','path':'contractor/register','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-DsBiioA9.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/arrow-left-CTxr7-rm.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'daftar-data/page':{'id':'daftar-data/page','parentId':'root','path':'daftar-data','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-CjugZVUp.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/search-S2o-xw2I.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'dashboard/page':{'id':'dashboard/page','parentId':'root','path':'dashboard','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-C9hEspUM.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/users-DyuJ5mRr.js','/assets/clsx-DBz8XMeR.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'tambah-data/page':{'id':'tambah-data/page','parentId':'root','path':'tambah-data','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page--CtOXAgz.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'__create/not-found':{'id':'__create/not-found','parentId':'root','path':'*?','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':true,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/not-found-CBo472Ju.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined}},'url':'/assets/manifest-1f1665f4.js','version':'1f1665f4','sri':undefined};
 
 const assetsBuildDirectory = "build\\client";
       const basename = "/";
