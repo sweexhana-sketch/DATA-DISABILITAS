@@ -85,13 +85,14 @@ for (const method of ['post', 'put', 'patch'] as const) {
 
 const authConfig = initAuthConfig((c) => ({
   secret: c.env.AUTH_SECRET || process.env.AUTH_SECRET || 'fallback-secret-for-dev',
+  trustHost: true,
   pages: {
     signIn: '/account/signin',
     signOut: '/account/logout',
     error: '/account/error',
   },
   basePath: '/api/auth',
-  skipCSRFCheck: true, // Ensuring CSRF is handled more gracefully in serverless
+  skipCSRFCheck: true,
   session: {
     strategy: 'jwt',
   },
@@ -112,17 +113,27 @@ const authConfig = initAuthConfig((c) => ({
         password: { label: 'Password', type: 'password' },
       },
       authorize: async (credentials) => {
-        const { email, password } = credentials;
-        if (!email || !password) return null;
-        const user = await adapter.getUserByEmail(email as string);
-        if (!user) return null;
-        const matchingAccount = user.accounts.find(
-          (account) => account.provider === 'credentials'
-        );
-        const accountPassword = matchingAccount?.password;
-        if (!accountPassword) return null;
-        const isValid = await verify(accountPassword, password as string);
-        return isValid ? user : null;
+        try {
+          console.log(`[Authorize] Signin attempt for: ${credentials.email}`);
+          const { email, password } = credentials;
+          if (!email || !password) return null;
+          
+          const start = Date.now();
+          const user = await adapter.getUserByEmail(email as string);
+          console.log(`[Authorize] DB lookup took: ${Date.now() - start}ms`);
+          
+          if (!user) return null;
+          const matchingAccount = user.accounts.find(
+            (account) => account.provider === 'credentials'
+          );
+          const accountPassword = matchingAccount?.password;
+          if (!accountPassword) return null;
+          const isValid = await verify(accountPassword, password as string);
+          return isValid ? user : null;
+        } catch (err) {
+          console.error('[Authorize] Signin error:', err);
+          return null;
+        }
       },
     }),
     Credentials({
@@ -134,55 +145,49 @@ const authConfig = initAuthConfig((c) => ({
         name: { label: 'Name', type: 'text' },
       },
       authorize: async (credentials) => {
-        const { email, password, name } = credentials;
-        if (!email || !password) return null;
-        const user = await adapter.getUserByEmail(email as string);
-        if (!user) {
-          const newUser = await adapter.createUser({
-            emailVerified: null,
-            email: email as string,
-            name: typeof name === 'string' ? name : undefined,
-          });
-          await adapter.linkAccount({
-            extraData: {
-              password: await hash(password as string),
-            },
-            type: 'credentials',
-            userId: newUser.id,
-            providerAccountId: newUser.id,
-            provider: 'credentials',
-          });
-          return newUser;
+        try {
+          console.log(`[Authorize] Signup attempt for: ${credentials.email}`);
+          const { email, password, name } = credentials;
+          if (!email || !password) return null;
+          
+          const start = Date.now();
+          const user = await adapter.getUserByEmail(email as string);
+          console.log(`[Authorize] DB lookup took: ${Date.now() - start}ms`);
+          
+          if (!user) {
+            console.log(`[Authorize] Creating new user: ${email}`);
+            const newUser = await adapter.createUser({
+              emailVerified: null,
+              email: email as string,
+              name: typeof name === 'string' ? name : undefined,
+            });
+            console.log(`[Authorize] Creating account for user: ${newUser.id}`);
+            await adapter.linkAccount({
+              extraData: {
+                password: await hash(password as string),
+              },
+              type: 'credentials',
+              userId: newUser.id,
+              providerAccountId: newUser.id,
+              provider: 'credentials',
+            });
+            return newUser;
+          }
+          return null;
+        } catch (err) {
+          console.error('[Authorize] Signup error:', err);
+          return null;
         }
-        return null;
       },
     }),
   ],
 }));
 
 app.use('/api/auth/*', authConfig);
-app.use('/api/auth/*', authHandler());
-app.all('/integrations/:path{.+}', async (c, next) => {
-  const queryParams = c.req.query();
-  const url = `${process.env.NEXT_PUBLIC_CREATE_BASE_URL ?? 'https://www.create.xyz'}/integrations/${c.req.param('path')}${Object.keys(queryParams).length > 0 ? `?${new URLSearchParams(queryParams).toString()}` : ''}`;
-
-  return proxy(url, {
-    method: c.req.method,
-    body: c.req.raw.body ?? null,
-    // @ts-ignore - this key is accepted even if types not aware and is
-    // required for streaming integrations
-    duplex: 'half',
-    redirect: 'manual',
-    headers: {
-      ...c.req.header(),
-      'X-Forwarded-For': process.env.NEXT_PUBLIC_CREATE_HOST,
-      'x-createxyz-host': process.env.NEXT_PUBLIC_CREATE_HOST,
-      Host: process.env.NEXT_PUBLIC_CREATE_HOST,
-      'x-createxyz-project-group-id': process.env.NEXT_PUBLIC_PROJECT_GROUP_ID,
-    },
-  });
+app.all('/api/auth/*', async (c, next) => {
+  console.log(`[Auth] Path: ${c.req.path}, Method: ${c.req.method}`);
+  return authHandler()(c, next);
 });
-
 app.route(API_BASENAME, api);
 
 export default await createHonoServer({
