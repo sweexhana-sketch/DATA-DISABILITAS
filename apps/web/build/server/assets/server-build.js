@@ -1,13 +1,13 @@
 import { jsx, Fragment, jsxs } from 'react/jsx-runtime';
 import { PassThrough } from 'node:stream';
 import { createReadableStreamFromReadable } from '@react-router/node';
-import { ServerRouter, useMatches, useActionData, useLoaderData, useParams, useNavigate, useLocation, Meta, Links, ScrollRestoration, Scripts, Outlet, useRouteError, useAsyncError } from 'react-router';
+import { ServerRouter, useMatches, useActionData, useLoaderData, useParams, useNavigate, useLocation, Meta, Links, ScrollRestoration, Scripts, Outlet, useRouteError, useAsyncError, useSearchParams } from 'react-router';
 import { isbot } from 'isbot';
 import { renderToPipeableStream } from 'react-dom/server';
 import * as React from 'react';
-import { createElement, forwardRef, useEffect, useRef, useState, Component, useCallback } from 'react';
+import { createElement, forwardRef, useEffect, useRef, useState, Component, useCallback, Suspense } from 'react';
 import { useButton } from '@react-aria/button';
-import { f as fetchWithHeaders } from './index-GuGXQQnu.js';
+import { f as fetchWithHeaders } from './index-2uSnybco.js';
 import { SessionProvider, signIn, signOut, useSession } from '@hono/auth-js/react';
 import { toPng } from 'html-to-image';
 import { serializeError } from 'serialize-error';
@@ -819,7 +819,7 @@ function HomePage() {
   return null;
 }
 
-const page$c = withComponentProps(function WrappedPage(props) {
+const page$d = withComponentProps(function WrappedPage(props) {
   return /* @__PURE__ */jsx(RootLayout, {
     children: /* @__PURE__ */jsx(HomePage, {
       ...props
@@ -828,6 +828,104 @@ const page$c = withComponentProps(function WrappedPage(props) {
 });
 
 const route1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: page$d
+}, Symbol.toStringTag, { value: 'Module' }));
+
+function ErrorContent() {
+  const [searchParams] = useSearchParams();
+  const error = searchParams.get("error");
+  const getErrorMessage = (err) => {
+    switch (err) {
+      case "Configuration":
+        return "Terjadi galat konfigurasi pada server.";
+      case "AccessDenied":
+        return "Akses ditolak. Anda tidak memiliki izin untuk masuk.";
+      case "Verification":
+        return "Tautan verifikasi telah kedaluwarsa atau sudah digunakan.";
+      case "CredentialsSignin":
+        return "Email atau password salah.";
+      default:
+        return "Terjadi kesalahan saat masuk. Silakan coba lagi.";
+    }
+  };
+  return /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
+    className: "flex min-h-screen w-full items-center justify-center bg-[#F7F9FC]",
+    renderId: "render-6f839aae",
+    as: "div",
+    children: /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
+      className: "w-full max-w-md rounded bg-white p-8 border border-[#E4E9F2] text-center",
+      renderId: "render-73a15d5d",
+      as: "div",
+      children: /* @__PURE__ */ jsxs(CreatePolymorphicComponent, {
+        className: "mb-6",
+        renderId: "render-835e4a29",
+        as: "div",
+        children: [/* @__PURE__ */ jsx(CreatePolymorphicComponent, {
+          className: "flex justify-center mb-6",
+          renderId: "render-112f5a01",
+          as: "div",
+          children: /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
+            className: "w-16 h-16 bg-red-100 rounded-full flex items-center justify-center",
+            renderId: "render-c0e42bc3",
+            as: "div",
+            children: /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
+              className: "fa-solid fa-circle-exclamation text-red-500 text-3xl",
+              renderId: "render-87789077",
+              as: "i"
+            })
+          })
+        }), /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
+          className: "text-2xl font-bold text-[#2A2E45] mb-2",
+          renderId: "render-03b06c54",
+          as: "h1",
+          children: "Oops! Terjadi Kesalahan"
+        }), /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
+          className: "text-sm text-red-500 bg-red-50 p-3 rounded mb-6",
+          renderId: "render-eff15210",
+          as: "p",
+          children: getErrorMessage(error)
+        }), /* @__PURE__ */ jsxs(CreatePolymorphicComponent, {
+          className: "space-y-3",
+          renderId: "render-afe591e5",
+          as: "div",
+          children: [/* @__PURE__ */ jsx(CreatePolymorphicComponent, {
+            href: "/account/signin",
+            className: "block w-full h-10 leading-10 bg-[#1570FF] text-white rounded text-sm font-semibold hover:bg-[#0F5FE6] transition-colors",
+            renderId: "render-9f1ca4a6",
+            as: "a",
+            children: "Kembali ke Login"
+          }), /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
+            className: "text-xs text-[#8A8FA6]",
+            renderId: "render-ccc51da9",
+            as: "p",
+            children: "Jika masalah terus berlanjut, hubungi administrator sistem."
+          })]
+        })]
+      })
+    })
+  });
+}
+function AuthErrorPage() {
+  return /* @__PURE__ */ jsx(Suspense, {
+    fallback: /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
+      renderId: "render-6956e7c8",
+      as: "div",
+      children: "Loading..."
+    }),
+    children: /* @__PURE__ */ jsx(ErrorContent, {})
+  });
+}
+
+const page$c = withComponentProps(function WrappedPage(props) {
+  return /* @__PURE__ */jsx(RootLayout, {
+    children: /* @__PURE__ */jsx(AuthErrorPage, {
+      ...props
+    })
+  });
+});
+
+const route2 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: page$c
 }, Symbol.toStringTag, { value: 'Module' }));
@@ -917,7 +1015,7 @@ const page$b = withComponentProps(function WrappedPage(props) {
   });
 });
 
-const route2 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const route3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: page$b
 }, Symbol.toStringTag, { value: 'Module' }));
@@ -1066,7 +1164,7 @@ const page$a = withComponentProps(function WrappedPage(props) {
   });
 });
 
-const route3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const route4 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: page$a
 }, Symbol.toStringTag, { value: 'Module' }));
@@ -1245,7 +1343,7 @@ const page$9 = withComponentProps(function WrappedPage(props) {
   });
 });
 
-const route4 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const route5 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: page$9
 }, Symbol.toStringTag, { value: 'Module' }));
@@ -1635,7 +1733,7 @@ const page$8 = withComponentProps(function WrappedPage(props) {
   });
 });
 
-const route5 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const route6 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: page$8
 }, Symbol.toStringTag, { value: 'Module' }));
@@ -2339,7 +2437,7 @@ const page$7 = withComponentProps(function WrappedPage(props) {
   });
 });
 
-const route6 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const route7 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: page$7
 }, Symbol.toStringTag, { value: 'Module' }));
@@ -2702,7 +2800,7 @@ const page$6 = withComponentProps(function WrappedPage(props) {
   });
 });
 
-const route7 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const route8 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: page$6
 }, Symbol.toStringTag, { value: 'Module' }));
@@ -2894,7 +2992,7 @@ const page$5 = withComponentProps(function WrappedPage(props) {
   });
 });
 
-const route8 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const route9 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: page$5
 }, Symbol.toStringTag, { value: 'Module' }));
@@ -3478,7 +3576,7 @@ const page$4 = withComponentProps(function WrappedPage(props) {
   });
 });
 
-const route9 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const route10 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: page$4
 }, Symbol.toStringTag, { value: 'Module' }));
@@ -4245,7 +4343,7 @@ const page$3 = withComponentProps(function WrappedPage(props) {
   });
 });
 
-const route10 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const route11 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: page$3
 }, Symbol.toStringTag, { value: 'Module' }));
@@ -4501,7 +4599,7 @@ const page$2 = withComponentProps(function WrappedPage(props) {
   });
 });
 
-const route11 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const route12 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: page$2
 }, Symbol.toStringTag, { value: 'Module' }));
@@ -4719,7 +4817,7 @@ const page$1 = withComponentProps(function WrappedPage(props) {
   });
 });
 
-const route12 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const route13 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: page$1
 }, Symbol.toStringTag, { value: 'Module' }));
@@ -5083,7 +5181,7 @@ const page = withComponentProps(function WrappedPage(props) {
   });
 });
 
-const route13 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const route14 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: page
 }, Symbol.toStringTag, { value: 'Module' }));
@@ -5357,13 +5455,13 @@ const notFound = withComponentProps(function CreateDefaultNotFoundPage({
   });
 });
 
-const route14 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const route15 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: notFound,
   loader
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const serverManifest = {'entry':{'module':'/assets/entry.client-DrwnpP4j.js','imports':['/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/index-DpBzRyJG.js'],'css':[]},'routes':{'root':{'id':'root','parentId':undefined,'path':'','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/root-BmqpvwSl.js','imports':['/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/index-DpBzRyJG.js','/assets/with-props-4S6yQdI1.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/react-EfX2AG1E.js','/assets/clsx-DBz8XMeR.js'],'css':['/assets/root-B_C7VXNK.css'],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'page':{'id':'page','parentId':'root','path':undefined,'index':true,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-BZXCj1IN.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'account/logout/page':{'id':'account/logout/page','parentId':'root','path':'account/logout','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-Dqw6MC1g.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/useAuth-WmJQllxo.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'account/signin/page':{'id':'account/signin/page','parentId':'root','path':'account/signin','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-Dwp-yeXE.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/useAuth-WmJQllxo.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'account/signup/page':{'id':'account/signup/page','parentId':'root','path':'account/signup','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-Cm6ZYPiS.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/useAuth-WmJQllxo.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'admin/contractors/page':{'id':'admin/contractors/page','parentId':'root','path':'admin/contractors','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-CIbqykSf.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/arrow-left-CTxr7-rm.js','/assets/search-S2o-xw2I.js','/assets/clock-BK95Y1o_.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'admin/contractors/[id]/page':{'id':'admin/contractors/[id]/page','parentId':'root','path':'admin/contractors/:id','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-Ccswmbwt.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/arrow-left-CTxr7-rm.js','/assets/clock-BK95Y1o_.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'admin/dashboard/page':{'id':'admin/dashboard/page','parentId':'root','path':'admin/dashboard','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-CKvnbDoL.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/arrow-left-CTxr7-rm.js','/assets/users-DyuJ5mRr.js','/assets/clock-BK95Y1o_.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'admin/make-first-admin/page':{'id':'admin/make-first-admin/page','parentId':'root','path':'admin/make-first-admin','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-D8wwXBd5.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'contractor/profile/page':{'id':'contractor/profile/page','parentId':'root','path':'contractor/profile','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-Q5KeLYfY.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/arrow-left-CTxr7-rm.js','/assets/clock-BK95Y1o_.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'contractor/register/page':{'id':'contractor/register/page','parentId':'root','path':'contractor/register','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-DsBiioA9.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/arrow-left-CTxr7-rm.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'daftar-data/page':{'id':'daftar-data/page','parentId':'root','path':'daftar-data','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-CjugZVUp.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/search-S2o-xw2I.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'dashboard/page':{'id':'dashboard/page','parentId':'root','path':'dashboard','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-C9hEspUM.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/users-DyuJ5mRr.js','/assets/clsx-DBz8XMeR.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'tambah-data/page':{'id':'tambah-data/page','parentId':'root','path':'tambah-data','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page--CtOXAgz.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'__create/not-found':{'id':'__create/not-found','parentId':'root','path':'*?','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':true,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/not-found-CBo472Ju.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined}},'url':'/assets/manifest-51af2aa4.js','version':'51af2aa4','sri':undefined};
+const serverManifest = {'entry':{'module':'/assets/entry.client-Bw_v3pY5.js','imports':['/assets/chunk-D4RADZKF-B1fEdaIG.js','/assets/index-pCNnsjO-.js'],'css':[]},'routes':{'root':{'id':'root','parentId':undefined,'path':'','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/root-fpb79Ka6.js','imports':['/assets/chunk-D4RADZKF-B1fEdaIG.js','/assets/index-pCNnsjO-.js','/assets/with-props-C5IFgWZc.js','/assets/PolymorphicComponent-BXHKhbGx.js','/assets/react-DRUH8C2z.js','/assets/clsx-DBz8XMeR.js'],'css':['/assets/root-vFSJpNsU.css'],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'page':{'id':'page','parentId':'root','path':undefined,'index':true,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-Pb3y2uKJ.js','imports':['/assets/with-props-C5IFgWZc.js','/assets/chunk-D4RADZKF-B1fEdaIG.js','/assets/layout-CeB7sAOJ.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'account/error/page':{'id':'account/error/page','parentId':'root','path':'account/error','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-ouidOYNx.js','imports':['/assets/with-props-C5IFgWZc.js','/assets/chunk-D4RADZKF-B1fEdaIG.js','/assets/layout-CeB7sAOJ.js','/assets/PolymorphicComponent-BXHKhbGx.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'account/logout/page':{'id':'account/logout/page','parentId':'root','path':'account/logout','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-r4qkY9Kn.js','imports':['/assets/with-props-C5IFgWZc.js','/assets/chunk-D4RADZKF-B1fEdaIG.js','/assets/layout-CeB7sAOJ.js','/assets/PolymorphicComponent-BXHKhbGx.js','/assets/useAuth-BlAUt43I.js','/assets/react-DRUH8C2z.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'account/signin/page':{'id':'account/signin/page','parentId':'root','path':'account/signin','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-DxChp0Pg.js','imports':['/assets/with-props-C5IFgWZc.js','/assets/chunk-D4RADZKF-B1fEdaIG.js','/assets/layout-CeB7sAOJ.js','/assets/PolymorphicComponent-BXHKhbGx.js','/assets/useAuth-BlAUt43I.js','/assets/react-DRUH8C2z.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'account/signup/page':{'id':'account/signup/page','parentId':'root','path':'account/signup','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-Cu2JKaa2.js','imports':['/assets/with-props-C5IFgWZc.js','/assets/chunk-D4RADZKF-B1fEdaIG.js','/assets/layout-CeB7sAOJ.js','/assets/PolymorphicComponent-BXHKhbGx.js','/assets/useAuth-BlAUt43I.js','/assets/react-DRUH8C2z.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'admin/contractors/page':{'id':'admin/contractors/page','parentId':'root','path':'admin/contractors','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-P24bceyf.js','imports':['/assets/with-props-C5IFgWZc.js','/assets/chunk-D4RADZKF-B1fEdaIG.js','/assets/layout-CeB7sAOJ.js','/assets/PolymorphicComponent-BXHKhbGx.js','/assets/createLucideIcon-DGNd51Bi.js','/assets/arrow-left-_kXw13UA.js','/assets/search-BylguWBh.js','/assets/clock-ChL-zaAD.js','/assets/react-DRUH8C2z.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'admin/contractors/[id]/page':{'id':'admin/contractors/[id]/page','parentId':'root','path':'admin/contractors/:id','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-Di1ZBDKg.js','imports':['/assets/with-props-C5IFgWZc.js','/assets/chunk-D4RADZKF-B1fEdaIG.js','/assets/layout-CeB7sAOJ.js','/assets/PolymorphicComponent-BXHKhbGx.js','/assets/createLucideIcon-DGNd51Bi.js','/assets/arrow-left-_kXw13UA.js','/assets/clock-ChL-zaAD.js','/assets/react-DRUH8C2z.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'admin/dashboard/page':{'id':'admin/dashboard/page','parentId':'root','path':'admin/dashboard','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-BXtJbj0i.js','imports':['/assets/with-props-C5IFgWZc.js','/assets/chunk-D4RADZKF-B1fEdaIG.js','/assets/layout-CeB7sAOJ.js','/assets/PolymorphicComponent-BXHKhbGx.js','/assets/createLucideIcon-DGNd51Bi.js','/assets/arrow-left-_kXw13UA.js','/assets/users-DjETfZV3.js','/assets/clock-ChL-zaAD.js','/assets/react-DRUH8C2z.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'admin/make-first-admin/page':{'id':'admin/make-first-admin/page','parentId':'root','path':'admin/make-first-admin','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-ByArBwNJ.js','imports':['/assets/with-props-C5IFgWZc.js','/assets/chunk-D4RADZKF-B1fEdaIG.js','/assets/layout-CeB7sAOJ.js','/assets/PolymorphicComponent-BXHKhbGx.js','/assets/createLucideIcon-DGNd51Bi.js','/assets/react-DRUH8C2z.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'contractor/profile/page':{'id':'contractor/profile/page','parentId':'root','path':'contractor/profile','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-BIRH3bxf.js','imports':['/assets/with-props-C5IFgWZc.js','/assets/chunk-D4RADZKF-B1fEdaIG.js','/assets/layout-CeB7sAOJ.js','/assets/PolymorphicComponent-BXHKhbGx.js','/assets/createLucideIcon-DGNd51Bi.js','/assets/arrow-left-_kXw13UA.js','/assets/clock-ChL-zaAD.js','/assets/react-DRUH8C2z.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'contractor/register/page':{'id':'contractor/register/page','parentId':'root','path':'contractor/register','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-DY_MCeTf.js','imports':['/assets/with-props-C5IFgWZc.js','/assets/chunk-D4RADZKF-B1fEdaIG.js','/assets/layout-CeB7sAOJ.js','/assets/PolymorphicComponent-BXHKhbGx.js','/assets/createLucideIcon-DGNd51Bi.js','/assets/arrow-left-_kXw13UA.js','/assets/react-DRUH8C2z.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'daftar-data/page':{'id':'daftar-data/page','parentId':'root','path':'daftar-data','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-DC7On9UX.js','imports':['/assets/with-props-C5IFgWZc.js','/assets/chunk-D4RADZKF-B1fEdaIG.js','/assets/layout-CeB7sAOJ.js','/assets/PolymorphicComponent-BXHKhbGx.js','/assets/createLucideIcon-DGNd51Bi.js','/assets/search-BylguWBh.js','/assets/react-DRUH8C2z.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'dashboard/page':{'id':'dashboard/page','parentId':'root','path':'dashboard','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-BFGrOp6F.js','imports':['/assets/with-props-C5IFgWZc.js','/assets/chunk-D4RADZKF-B1fEdaIG.js','/assets/layout-CeB7sAOJ.js','/assets/PolymorphicComponent-BXHKhbGx.js','/assets/createLucideIcon-DGNd51Bi.js','/assets/users-DjETfZV3.js','/assets/clsx-DBz8XMeR.js','/assets/react-DRUH8C2z.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'tambah-data/page':{'id':'tambah-data/page','parentId':'root','path':'tambah-data','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-bYe7orrY.js','imports':['/assets/with-props-C5IFgWZc.js','/assets/chunk-D4RADZKF-B1fEdaIG.js','/assets/layout-CeB7sAOJ.js','/assets/PolymorphicComponent-BXHKhbGx.js','/assets/createLucideIcon-DGNd51Bi.js','/assets/react-DRUH8C2z.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'__create/not-found':{'id':'__create/not-found','parentId':'root','path':'*?','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':true,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/not-found-CJuIXLEK.js','imports':['/assets/with-props-C5IFgWZc.js','/assets/PolymorphicComponent-BXHKhbGx.js','/assets/chunk-D4RADZKF-B1fEdaIG.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined}},'url':'/assets/manifest-58d261cf.js','version':'58d261cf','sri':undefined};
 
 const assetsBuildDirectory = "build\\client";
       const basename = "/";
@@ -5391,13 +5489,21 @@ const assetsBuildDirectory = "build\\client";
           caseSensitive: undefined,
           module: route1
         },
+  "account/error/page": {
+          id: "account/error/page",
+          parentId: "root",
+          path: "account/error",
+          index: undefined,
+          caseSensitive: undefined,
+          module: route2
+        },
   "account/logout/page": {
           id: "account/logout/page",
           parentId: "root",
           path: "account/logout",
           index: undefined,
           caseSensitive: undefined,
-          module: route2
+          module: route3
         },
   "account/signin/page": {
           id: "account/signin/page",
@@ -5405,7 +5511,7 @@ const assetsBuildDirectory = "build\\client";
           path: "account/signin",
           index: undefined,
           caseSensitive: undefined,
-          module: route3
+          module: route4
         },
   "account/signup/page": {
           id: "account/signup/page",
@@ -5413,7 +5519,7 @@ const assetsBuildDirectory = "build\\client";
           path: "account/signup",
           index: undefined,
           caseSensitive: undefined,
-          module: route4
+          module: route5
         },
   "admin/contractors/page": {
           id: "admin/contractors/page",
@@ -5421,7 +5527,7 @@ const assetsBuildDirectory = "build\\client";
           path: "admin/contractors",
           index: undefined,
           caseSensitive: undefined,
-          module: route5
+          module: route6
         },
   "admin/contractors/[id]/page": {
           id: "admin/contractors/[id]/page",
@@ -5429,7 +5535,7 @@ const assetsBuildDirectory = "build\\client";
           path: "admin/contractors/:id",
           index: undefined,
           caseSensitive: undefined,
-          module: route6
+          module: route7
         },
   "admin/dashboard/page": {
           id: "admin/dashboard/page",
@@ -5437,7 +5543,7 @@ const assetsBuildDirectory = "build\\client";
           path: "admin/dashboard",
           index: undefined,
           caseSensitive: undefined,
-          module: route7
+          module: route8
         },
   "admin/make-first-admin/page": {
           id: "admin/make-first-admin/page",
@@ -5445,7 +5551,7 @@ const assetsBuildDirectory = "build\\client";
           path: "admin/make-first-admin",
           index: undefined,
           caseSensitive: undefined,
-          module: route8
+          module: route9
         },
   "contractor/profile/page": {
           id: "contractor/profile/page",
@@ -5453,7 +5559,7 @@ const assetsBuildDirectory = "build\\client";
           path: "contractor/profile",
           index: undefined,
           caseSensitive: undefined,
-          module: route9
+          module: route10
         },
   "contractor/register/page": {
           id: "contractor/register/page",
@@ -5461,7 +5567,7 @@ const assetsBuildDirectory = "build\\client";
           path: "contractor/register",
           index: undefined,
           caseSensitive: undefined,
-          module: route10
+          module: route11
         },
   "daftar-data/page": {
           id: "daftar-data/page",
@@ -5469,7 +5575,7 @@ const assetsBuildDirectory = "build\\client";
           path: "daftar-data",
           index: undefined,
           caseSensitive: undefined,
-          module: route11
+          module: route12
         },
   "dashboard/page": {
           id: "dashboard/page",
@@ -5477,7 +5583,7 @@ const assetsBuildDirectory = "build\\client";
           path: "dashboard",
           index: undefined,
           caseSensitive: undefined,
-          module: route12
+          module: route13
         },
   "tambah-data/page": {
           id: "tambah-data/page",
@@ -5485,7 +5591,7 @@ const assetsBuildDirectory = "build\\client";
           path: "tambah-data",
           index: undefined,
           caseSensitive: undefined,
-          module: route13
+          module: route14
         },
   "__create/not-found": {
           id: "__create/not-found",
@@ -5493,7 +5599,7 @@ const assetsBuildDirectory = "build\\client";
           path: "*?",
           index: undefined,
           caseSensitive: undefined,
-          module: route14
+          module: route15
         }
       };
 
