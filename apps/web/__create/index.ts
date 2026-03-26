@@ -37,33 +37,39 @@ for (const method of ['log', 'info', 'warn', 'error', 'debug'] as const) {
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
-// Test connection lazily or via health check
 const adapter = NeonAdapter(pool);
 
 export const app = new Hono();
 
+// Diagnostic routes (register early)
 app.get('/api/health-db', async (c) => {
-  console.log('[Health] Checking DB connection...');
+  console.log('[Diagnostic] Health check triggered');
   const start = Date.now();
   try {
     const result = await pool.query('SELECT NOW()');
     return c.json({ 
       status: 'ok', 
-      time: `${Date.now() - start}ms`, 
-      serverTime: result.rows[0].now,
-      env: {
-        has_db_url: !!process.env.DATABASE_URL,
-        db_url_prefix: process.env.DATABASE_URL?.split(':')[0]
-      }
+      db_time: result.rows[0].now,
+      duration: `${Date.now() - start}ms`,
+      env: { has_url: !!process.env.DATABASE_URL }
     });
   } catch (err: any) {
-    console.error('[Health] DB error:', err);
     return c.json({ 
       status: 'error', 
-      error: err.message, 
+      message: err.message, 
       stack: err.stack,
-      time: `${Date.now() - start}ms` 
+      duration: `${Date.now() - start}ms`
     }, 500);
+  }
+});
+
+app.get('/api/setup-db', async (c) => {
+  console.log('[Diagnostic] Setup check triggered');
+  try {
+    const tables = await pool.query("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'");
+    return c.json({ tables: tables.rows.map(r => r.table_name) });
+  } catch (err: any) {
+    return c.json({ error: err.message }, 500);
   }
 });
 
