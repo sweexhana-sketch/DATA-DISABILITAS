@@ -7,7 +7,7 @@ import { renderToPipeableStream } from 'react-dom/server';
 import * as React from 'react';
 import { createElement, forwardRef, useEffect, useRef, useState, Component, useCallback } from 'react';
 import { useButton } from '@react-aria/button';
-import { f as fetchWithHeaders } from './index-DQqAu_3W.js';
+import { f as fetchWithHeaders } from './index-GuGXQQnu.js';
 import { SessionProvider, signIn, signOut, useSession } from '@hono/auth-js/react';
 import { toPng } from 'html-to-image';
 import { serializeError } from 'serialize-error';
@@ -32,17 +32,11 @@ import 'hono/proxy';
 import 'hono/body-limit';
 import 'hono/request-id';
 import 'hono/factory';
-import '@hono/node-server';
 import '@hono/node-server/serve-static';
+import 'hono/aws-lambda';
 import 'hono/logger';
 import 'ws';
 import '@auth/core/jwt';
-import 'node:path';
-import 'node:fs';
-import 'node:url';
-import '@react-router/dev/routes';
-import 'clean-stack';
-import 'node:fs/promises';
 
 const streamTimeout = 5e3;
 function handleRequest(request, responseStatusCode, responseHeaders, routerContext, loadContext) {
@@ -239,11 +233,12 @@ function useDevServerHeartbeat() {
   });
 }
 
+const __vite_import_meta_env__ = {};
 const links = () => [];
 if (globalThis.window && globalThis.window !== void 0) {
   globalThis.window.fetch = fetchWithHeaders;
 }
-const LoadFontsSSR = LoadFonts ;
+const LoadFontsSSR = typeof (__vite_import_meta_env__) !== "undefined" && true ? LoadFonts : null;
 function InternalErrorBoundary({
   error: errorArg
 }) {
@@ -5363,7 +5358,7 @@ const assetsBuildDirectory = "build\\client";
       const future = {"unstable_middleware":false,"unstable_optimizeDeps":false,"unstable_splitRouteModules":false,"unstable_subResourceIntegrity":false,"unstable_viteEnvironmentApi":false};
       const ssr = true;
       const isSpaMode = false;
-      const prerender = ["/*?"];
+      const prerender = [];
       const routeDiscovery = {"mode":"lazy","manifestPath":"/__manifest"};
       const publicPath = "/";
       const entry = { module: entryServer };
