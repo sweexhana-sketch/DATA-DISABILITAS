@@ -359,4 +359,5 @@ export const { auth } = CreateAuth({
     error: '/account/error',
   },
   basePath: '/api/auth',
+  secret: process.env.AUTH_SECRET,
 })

@@ -4,6 +4,7 @@ import useAuth from "@/utils/useAuth";
 export default function SignUpPage() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -17,7 +18,7 @@ export default function SignUpPage() {
     setLoading(true);
     setError(null);
 
-    if (!email || !password || !confirmPassword) {
+    if (!name || !email || !password || !confirmPassword) {
       setError("Mohon isi semua kolom");
       setLoading(false);
       return;
@@ -37,6 +38,7 @@ export default function SignUpPage() {
 
     try {
       const result = await signUpWithCredentials({
+        name,
         email,
         password,
         callbackUrl: "/dashboard",
@@ -88,6 +90,20 @@ export default function SignUpPage() {
         </div>
 
         <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-[#2A2E45] mb-2">
+              Nama Lengkap
+            </label>
+            <input
+              required
+              name="name"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Masukkan nama lengkap Anda"
+              className="w-full h-10 px-3 border border-[#E4E9F2] rounded text-sm focus:outline-none focus:ring-2 focus:ring-[#1570FF]"
+            />
+          </div>
           <div>
             <label className="block text-sm font-medium text-[#2A2E45] mb-2">
               Email

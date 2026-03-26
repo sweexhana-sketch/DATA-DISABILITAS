@@ -7,7 +7,7 @@ import { renderToPipeableStream } from 'react-dom/server';
 import * as React from 'react';
 import { createElement, forwardRef, useEffect, useRef, useState, Component, useCallback } from 'react';
 import { useButton } from '@react-aria/button';
-import { f as fetchWithHeaders } from './index-2uSnybco.js';
+import { f as fetchWithHeaders } from './index-Y040fj3y.js';
 import { SessionProvider, signIn, signOut, useSession } from '@hono/auth-js/react';
 import { toPng } from 'html-to-image';
 import { serializeError } from 'serialize-error';
@@ -1171,6 +1171,7 @@ const route4 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
 function SignUpPage() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -1183,7 +1184,7 @@ function SignUpPage() {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    if (!email || !password || !confirmPassword) {
+    if (!name || !email || !password || !confirmPassword) {
       setError("Mohon isi semua kolom");
       setLoading(false);
       return;
@@ -1200,6 +1201,7 @@ function SignUpPage() {
     }
     try {
       const result = await signUpWithCredentials({
+        name,
         email,
         password,
         callbackUrl: "/dashboard",
@@ -1229,7 +1231,7 @@ function SignUpPage() {
       strokeLinejoin: "round",
       strokeWidth: 2,
       d: "M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21",
-      renderId: "render-ecd68a43",
+      renderId: "render-3bae7952",
       as: "path"
     })
   }) : /* @__PURE__ */ jsxs("svg", {
@@ -1243,63 +1245,82 @@ function SignUpPage() {
       strokeLinejoin: "round",
       strokeWidth: 2,
       d: "M15 12a3 3 0 11-6 0 3 3 0 016 0z",
-      renderId: "render-3bae7952",
+      renderId: "render-b973f770",
       as: "path"
     }), /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
       strokeLinecap: "round",
       strokeLinejoin: "round",
       strokeWidth: 2,
       d: "M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z",
-      renderId: "render-a4728b44",
+      renderId: "render-dacb80af",
       as: "path"
     })]
   });
   return /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
     className: "flex min-h-screen w-full items-center justify-center bg-[#F7F9FC]",
-    renderId: "render-04ac6fef",
+    renderId: "render-c995ee2b",
     as: "div",
     children: /* @__PURE__ */ jsxs(CreatePolymorphicComponent, {
       noValidate: true,
       onSubmit,
       className: "w-full max-w-md rounded bg-white p-8 border border-[#E4E9F2]",
-      renderId: "render-e977d911",
+      renderId: "render-62375f72",
       as: "form",
       children: [/* @__PURE__ */ jsxs(CreatePolymorphicComponent, {
         className: "mb-6 text-center",
-        renderId: "render-5bfe8c39",
+        renderId: "render-1c4b0568",
         as: "div",
         children: [/* @__PURE__ */ jsx(CreatePolymorphicComponent, {
           className: "flex justify-center mb-6",
-          renderId: "render-00d9e5e2",
+          renderId: "render-9590f88c",
           as: "div",
           children: /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
             src: "/logo-pbd.png",
             alt: "Logo Papua Barat Daya",
             className: "w-24 h-24 object-contain",
-            renderId: "render-13c293c9",
+            renderId: "render-708ef278",
             as: "img"
           })
         }), /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
           className: "text-2xl font-bold text-[#2A2E45] mb-2",
-          renderId: "render-83f6feab",
+          renderId: "render-8de40cc2",
           as: "h1",
           children: "Daftar Akun Baru"
         }), /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
           className: "text-sm text-[#8A8FA6]",
-          renderId: "render-eff02860",
+          renderId: "render-f205b8db",
           as: "p",
           children: "DINSOS & PPPA Papua Barat Daya"
         })]
       }), /* @__PURE__ */ jsxs(CreatePolymorphicComponent, {
         className: "space-y-4",
-        renderId: "render-73bfe0b1",
+        renderId: "render-5455f8f3",
         as: "div",
         children: [/* @__PURE__ */ jsxs(CreatePolymorphicComponent, {
-          renderId: "render-4aeea52f",
+          renderId: "render-f1634ef2",
           as: "div",
           children: [/* @__PURE__ */ jsx(CreatePolymorphicComponent, {
             className: "block text-sm font-medium text-[#2A2E45] mb-2",
-            renderId: "render-bbc2dc48",
+            renderId: "render-19003498",
+            as: "label",
+            children: "Nama Lengkap"
+          }), /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
+            required: true,
+            name: "name",
+            type: "text",
+            value: name,
+            onChange: (e) => setName(e.target.value),
+            placeholder: "Masukkan nama lengkap Anda",
+            className: "w-full h-10 px-3 border border-[#E4E9F2] rounded text-sm focus:outline-none focus:ring-2 focus:ring-[#1570FF]",
+            renderId: "render-f84383b0",
+            as: "input"
+          })]
+        }), /* @__PURE__ */ jsxs(CreatePolymorphicComponent, {
+          renderId: "render-edc32cdd",
+          as: "div",
+          children: [/* @__PURE__ */ jsx(CreatePolymorphicComponent, {
+            className: "block text-sm font-medium text-[#2A2E45] mb-2",
+            renderId: "render-0a0594e8",
             as: "label",
             children: "Email"
           }), /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
@@ -1310,20 +1331,20 @@ function SignUpPage() {
             onChange: (e) => setEmail(e.target.value),
             placeholder: "Masukkan email Anda",
             className: "w-full h-10 px-3 border border-[#E4E9F2] rounded text-sm focus:outline-none focus:ring-2 focus:ring-[#1570FF]",
-            renderId: "render-344e5e83",
+            renderId: "render-76302b79",
             as: "input"
           })]
         }), /* @__PURE__ */ jsxs(CreatePolymorphicComponent, {
-          renderId: "render-b4b155d6",
+          renderId: "render-2c1b53a7",
           as: "div",
           children: [/* @__PURE__ */ jsx(CreatePolymorphicComponent, {
             className: "block text-sm font-medium text-[#2A2E45] mb-2",
-            renderId: "render-7bb8dc87",
+            renderId: "render-f2d4002a",
             as: "label",
             children: "Password"
           }), /* @__PURE__ */ jsxs(CreatePolymorphicComponent, {
             className: "relative",
-            renderId: "render-ad4189f9",
+            renderId: "render-dfce6f2b",
             as: "div",
             children: [/* @__PURE__ */ jsx(CreatePolymorphicComponent, {
               required: true,
@@ -1333,14 +1354,14 @@ function SignUpPage() {
               onChange: (e) => setPassword(e.target.value),
               className: "w-full h-10 px-3 pr-10 border border-[#E4E9F2] rounded text-sm focus:outline-none focus:ring-2 focus:ring-[#1570FF]",
               placeholder: "Minimal 6 karakter",
-              renderId: "render-5b674bc4",
+              renderId: "render-5992ee59",
               as: "input"
             }), /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
               type: "button",
               onClick: () => setShowPassword(!showPassword),
               className: "absolute inset-y-0 right-0 flex items-center px-3 text-[#8A8FA6] hover:text-[#2A2E45]",
               tabIndex: -1,
-              renderId: "render-c2fabb05",
+              renderId: "render-1b216df6",
               as: "button",
               children: /* @__PURE__ */ jsx(EyeIcon, {
                 visible: showPassword
@@ -1348,16 +1369,16 @@ function SignUpPage() {
             })]
           })]
         }), /* @__PURE__ */ jsxs(CreatePolymorphicComponent, {
-          renderId: "render-df677764",
+          renderId: "render-dfc81767",
           as: "div",
           children: [/* @__PURE__ */ jsx(CreatePolymorphicComponent, {
             className: "block text-sm font-medium text-[#2A2E45] mb-2",
-            renderId: "render-41a04fa4",
+            renderId: "render-2a67c2b9",
             as: "label",
             children: "Konfirmasi Password"
           }), /* @__PURE__ */ jsxs(CreatePolymorphicComponent, {
             className: "relative",
-            renderId: "render-603a8beb",
+            renderId: "render-ded989ec",
             as: "div",
             children: [/* @__PURE__ */ jsx(CreatePolymorphicComponent, {
               required: true,
@@ -1367,14 +1388,14 @@ function SignUpPage() {
               onChange: (e) => setConfirmPassword(e.target.value),
               className: "w-full h-10 px-3 pr-10 border border-[#E4E9F2] rounded text-sm focus:outline-none focus:ring-2 focus:ring-[#1570FF]",
               placeholder: "Ulangi password Anda",
-              renderId: "render-0cfc0ddc",
+              renderId: "render-227b2e30",
               as: "input"
             }), /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
               type: "button",
               onClick: () => setShowConfirm(!showConfirm),
               className: "absolute inset-y-0 right-0 flex items-center px-3 text-[#8A8FA6] hover:text-[#2A2E45]",
               tabIndex: -1,
-              renderId: "render-20f203db",
+              renderId: "render-ac1f9388",
               as: "button",
               children: /* @__PURE__ */ jsx(EyeIcon, {
                 visible: showConfirm
@@ -1383,24 +1404,24 @@ function SignUpPage() {
           })]
         }), error && /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
           className: "rounded bg-red-50 p-3 text-sm text-red-500",
-          renderId: "render-429d893e",
+          renderId: "render-49d7e91c",
           as: "div",
           children: error
         }), /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
           type: "submit",
           disabled: loading,
           className: "w-full h-10 bg-[#1570FF] text-white rounded text-sm font-semibold hover:bg-[#0F5FE6] disabled:opacity-50",
-          renderId: "render-16ffd626",
+          renderId: "render-d49f7969",
           as: "button",
           children: loading ? "Memuat..." : "Daftar"
         }), /* @__PURE__ */ jsxs(CreatePolymorphicComponent, {
           className: "text-center text-sm text-[#8A8FA6]",
-          renderId: "render-c5a3e883",
+          renderId: "render-eb0cb3fd",
           as: "p",
           children: ["Sudah punya akun?", " ", /* @__PURE__ */ jsx(CreatePolymorphicComponent, {
             href: "/account/signin",
             className: "text-[#1570FF] hover:text-[#0F5FE6] font-semibold",
-            renderId: "render-2e2e09a6",
+            renderId: "render-215244f2",
             as: "a",
             children: "Masuk"
           })]
@@ -5536,7 +5557,7 @@ const route15 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   loader
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const serverManifest = {'entry':{'module':'/assets/entry.client-DrwnpP4j.js','imports':['/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/index-DpBzRyJG.js'],'css':[]},'routes':{'root':{'id':'root','parentId':undefined,'path':'','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/root-tW2l3ChJ.js','imports':['/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/index-DpBzRyJG.js','/assets/with-props-4S6yQdI1.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/react-EfX2AG1E.js','/assets/clsx-DBz8XMeR.js'],'css':['/assets/root-BRXsp2XP.css'],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'page':{'id':'page','parentId':'root','path':undefined,'index':true,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-BZXCj1IN.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'account/error/page':{'id':'account/error/page','parentId':'root','path':'account/error','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-BYHJWcdd.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'account/logout/page':{'id':'account/logout/page','parentId':'root','path':'account/logout','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-Dqw6MC1g.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/useAuth-WmJQllxo.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'account/signin/page':{'id':'account/signin/page','parentId':'root','path':'account/signin','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-DLa-jT1k.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/useAuth-WmJQllxo.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'account/signup/page':{'id':'account/signup/page','parentId':'root','path':'account/signup','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-CjjesgIt.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/useAuth-WmJQllxo.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'admin/contractors/page':{'id':'admin/contractors/page','parentId':'root','path':'admin/contractors','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-CIbqykSf.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/arrow-left-CTxr7-rm.js','/assets/search-S2o-xw2I.js','/assets/clock-BK95Y1o_.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'admin/contractors/[id]/page':{'id':'admin/contractors/[id]/page','parentId':'root','path':'admin/contractors/:id','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-Ccswmbwt.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/arrow-left-CTxr7-rm.js','/assets/clock-BK95Y1o_.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'admin/dashboard/page':{'id':'admin/dashboard/page','parentId':'root','path':'admin/dashboard','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-CKvnbDoL.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/arrow-left-CTxr7-rm.js','/assets/users-DyuJ5mRr.js','/assets/clock-BK95Y1o_.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'admin/make-first-admin/page':{'id':'admin/make-first-admin/page','parentId':'root','path':'admin/make-first-admin','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-D8wwXBd5.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'contractor/profile/page':{'id':'contractor/profile/page','parentId':'root','path':'contractor/profile','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-Q5KeLYfY.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/arrow-left-CTxr7-rm.js','/assets/clock-BK95Y1o_.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'contractor/register/page':{'id':'contractor/register/page','parentId':'root','path':'contractor/register','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-DsBiioA9.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/arrow-left-CTxr7-rm.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'daftar-data/page':{'id':'daftar-data/page','parentId':'root','path':'daftar-data','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-CjugZVUp.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/search-S2o-xw2I.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'dashboard/page':{'id':'dashboard/page','parentId':'root','path':'dashboard','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-C9hEspUM.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/users-DyuJ5mRr.js','/assets/clsx-DBz8XMeR.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'tambah-data/page':{'id':'tambah-data/page','parentId':'root','path':'tambah-data','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page--CtOXAgz.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'__create/not-found':{'id':'__create/not-found','parentId':'root','path':'*?','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':true,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/not-found-CBo472Ju.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined}},'url':'/assets/manifest-1f1665f4.js','version':'1f1665f4','sri':undefined};
+const serverManifest = {'entry':{'module':'/assets/entry.client-DrwnpP4j.js','imports':['/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/index-DpBzRyJG.js'],'css':[]},'routes':{'root':{'id':'root','parentId':undefined,'path':'','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/root-tW2l3ChJ.js','imports':['/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/index-DpBzRyJG.js','/assets/with-props-4S6yQdI1.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/react-EfX2AG1E.js','/assets/clsx-DBz8XMeR.js'],'css':['/assets/root-BRXsp2XP.css'],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'page':{'id':'page','parentId':'root','path':undefined,'index':true,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-BZXCj1IN.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'account/error/page':{'id':'account/error/page','parentId':'root','path':'account/error','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-BYHJWcdd.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'account/logout/page':{'id':'account/logout/page','parentId':'root','path':'account/logout','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-Dqw6MC1g.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/useAuth-WmJQllxo.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'account/signin/page':{'id':'account/signin/page','parentId':'root','path':'account/signin','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-DLa-jT1k.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/useAuth-WmJQllxo.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'account/signup/page':{'id':'account/signup/page','parentId':'root','path':'account/signup','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-BxNvU4XR.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/useAuth-WmJQllxo.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'admin/contractors/page':{'id':'admin/contractors/page','parentId':'root','path':'admin/contractors','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-CIbqykSf.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/arrow-left-CTxr7-rm.js','/assets/search-S2o-xw2I.js','/assets/clock-BK95Y1o_.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'admin/contractors/[id]/page':{'id':'admin/contractors/[id]/page','parentId':'root','path':'admin/contractors/:id','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-Ccswmbwt.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/arrow-left-CTxr7-rm.js','/assets/clock-BK95Y1o_.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'admin/dashboard/page':{'id':'admin/dashboard/page','parentId':'root','path':'admin/dashboard','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-CKvnbDoL.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/arrow-left-CTxr7-rm.js','/assets/users-DyuJ5mRr.js','/assets/clock-BK95Y1o_.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'admin/make-first-admin/page':{'id':'admin/make-first-admin/page','parentId':'root','path':'admin/make-first-admin','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-D8wwXBd5.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'contractor/profile/page':{'id':'contractor/profile/page','parentId':'root','path':'contractor/profile','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-Q5KeLYfY.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/arrow-left-CTxr7-rm.js','/assets/clock-BK95Y1o_.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'contractor/register/page':{'id':'contractor/register/page','parentId':'root','path':'contractor/register','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-DsBiioA9.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/arrow-left-CTxr7-rm.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'daftar-data/page':{'id':'daftar-data/page','parentId':'root','path':'daftar-data','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-CjugZVUp.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/search-S2o-xw2I.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'dashboard/page':{'id':'dashboard/page','parentId':'root','path':'dashboard','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page-C9hEspUM.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/users-DyuJ5mRr.js','/assets/clsx-DBz8XMeR.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'tambah-data/page':{'id':'tambah-data/page','parentId':'root','path':'tambah-data','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':false,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/page--CtOXAgz.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js','/assets/layout-DRZaPxPG.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/createLucideIcon-DkjxJ4eo.js','/assets/react-EfX2AG1E.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined},'__create/not-found':{'id':'__create/not-found','parentId':'root','path':'*?','index':undefined,'caseSensitive':undefined,'hasAction':false,'hasLoader':true,'hasClientAction':false,'hasClientLoader':false,'hasClientMiddleware':false,'hasErrorBoundary':false,'module':'/assets/not-found-CBo472Ju.js','imports':['/assets/with-props-4S6yQdI1.js','/assets/PolymorphicComponent-CEHVqrgz.js','/assets/chunk-D4RADZKF-DR2tpiPZ.js'],'css':[],'clientActionModule':undefined,'clientLoaderModule':undefined,'clientMiddlewareModule':undefined,'hydrateFallbackModule':undefined}},'url':'/assets/manifest-2ddfbdd5.js','version':'2ddfbdd5','sri':undefined};
 
 const assetsBuildDirectory = "build\\client";
       const basename = "/";

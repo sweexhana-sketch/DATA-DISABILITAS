@@ -16,7 +16,6 @@ import { serializeError } from 'serialize-error';
 import ws from 'ws';
 import NeonAdapter from './adapter.js';
 import { getHTMLForErrorPage } from './get-html-for-error-page.js';
-import { isAuthAction } from './is-auth-action.js';
 import { API_BASENAME, api } from './route-builder.js';
 neonConfig.webSocketConstructor = ws;
 
@@ -245,10 +244,9 @@ app.all('/integrations/:path{.+}', async (c, next) => {
 });
 
 app.use('/api/auth/*', async (c, next) => {
-  if (isAuthAction(c.req.path)) {
-    return authHandler()(c, next);
-  }
-  return next();
+  console.log(`[Auth] Request: ${c.req.method} ${c.req.path}`);
+  // Handle Auth.js actions directly
+  return authHandler()(c, next);
 });
 app.route(API_BASENAME, api);
 
