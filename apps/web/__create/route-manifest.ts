@@ -1,6 +1,7 @@
 import * as route0 from '../src/app/api/auth/expo-web-success/route.js';
 import * as route1 from '../src/app/api/auth/token/route.js';
 import * as route2 from '../src/app/api/certifications/route.js';
+import * as initDbRoute from '../src/app/api/init-db/route.js';
 import * as route3 from '../src/app/api/contractors/[id]/route.js';
 import * as route4 from '../src/app/api/contractors/my-profile/route.js';
 import * as route5 from '../src/app/api/contractors/route.js';
@@ -16,6 +17,7 @@ export const routesManifest = [
   { path: 'auth/expo-web-success/route.js', module: route0 },
   { path: 'auth/token/route.js', module: route1 },
   { path: 'certifications/route.js', module: route2 },
+  { path: 'init-db/route.js', module: initDbRoute },
   { path: 'contractors/[id]/route.js', module: route3 },
   { path: 'contractors/my-profile/route.js', module: route4 },
   { path: 'contractors/route.js', module: route5 },
