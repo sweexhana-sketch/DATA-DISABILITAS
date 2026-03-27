@@ -35,8 +35,8 @@ export default async function (req: any, res: any) {
     
     const request = new Request(url, init);
     
-    // 3. Call Hono directly!
-    const response = await app.fetch(request);
+    // 3. Call Hono directly! Pass process.env as Hono env bindings so c.env works.
+    const response = await app.fetch(request, process.env);
     
     // 4. Map Web Response back to Vercel Response
     // Handle split cookies correctly
