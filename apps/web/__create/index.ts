@@ -275,28 +275,6 @@ const authConfig = initAuthConfig((c) => ({
 app.use('/api/auth/*', authConfig);
 app.all('/api/auth/*', async (c, next) => {
   console.log(`[Auth] Path: ${c.req.path}, Method: ${c.req.method}`);
-  if (c.req.method === 'POST') {
-    try {
-      console.log('[Auth] Attempting to parse body manually...');
-      const body = await c.req.parseBody();
-      console.log('[Auth] Body parsed successfully! Keys:', Object.keys(body));
-      
-      const formData = new FormData();
-      for (const [k, v] of Object.entries(body)) {
-        if (typeof v === 'string') formData.append(k, v);
-      }
-      
-      const newReq = new Request(c.req.url, {
-        method: c.req.method,
-        headers: c.req.raw.headers,
-        body: formData
-      });
-      
-      Object.defineProperty(c.req, 'raw', { value: newReq });
-    } catch (err) {
-      console.error('[Auth] Manual body parsing failed:', err);
-    }
-  }
   return authHandler()(c, next);
 });
 app.route(API_BASENAME, api);
