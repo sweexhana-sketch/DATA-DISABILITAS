@@ -3,7 +3,7 @@ import nodeConsole from 'node:console';
 import { skipCSRFCheck } from '@auth/core';
 import Credentials from '@auth/core/providers/credentials';
 import { authHandler, initAuthConfig } from '@hono/auth-js';
-import { Pool, neonConfig } from '@neondatabase/serverless';
+import { neon, neonConfig } from '@neondatabase/serverless';
 import bcrypt from 'bcryptjs';
 import { Hono } from 'hono';
 import { contextStorage, getContext } from 'hono/context-storage';
@@ -34,9 +34,12 @@ for (const method of ['log', 'info', 'warn', 'error', 'debug'] as const) {
   };
 }
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
+const neonSql = neon(process.env.DATABASE_URL!, { fullResults: true });
+const pool = {
+  query: async (queryText: string, params?: any[]) => {
+    return neonSql(queryText, params);
+  }
+} as any;
 const adapter = NeonAdapter(pool);
 
 export const app = new Hono();
