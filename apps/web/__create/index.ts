@@ -9,7 +9,6 @@ import { Hono } from 'hono';
 import { contextStorage, getContext } from 'hono/context-storage';
 import { cors } from 'hono/cors';
 import { proxy } from 'hono/proxy';
-import { bodyLimit } from 'hono/body-limit';
 import { requestId } from 'hono/request-id';
 import { createHonoServer } from 'react-router-hono-server/aws-lambda';
 import { serializeError } from 'serialize-error';
@@ -37,7 +36,16 @@ for (const method of ['log', 'info', 'warn', 'error', 'debug'] as const) {
 const neonSql = neon(process.env.DATABASE_URL!, { fullResults: true });
 const pool = {
   query: async (queryText: string, params?: any[]) => {
-    return neonSql(queryText, params);
+    console.log(`[DB] EXECUTING: ${queryText.substring(0, 100)}... with params:`, params);
+    const start = Date.now();
+    try {
+      const res = await neonSql(queryText, params);
+      console.log(`[DB] FINISHED in ${Date.now() - start}ms. RowCount: ${res?.rowCount}`);
+      return res;
+    } catch (e) {
+      console.error(`[DB] ERROR:`, e);
+      throw e;
+    }
   }
 } as any;
 const adapter = NeonAdapter(pool);
@@ -158,17 +166,7 @@ if (process.env.CORS_ORIGINS) {
     })
   );
 }
-for (const method of ['post', 'put', 'patch'] as const) {
-  app[method](
-    '*',
-    bodyLimit({
-      maxSize: 4.5 * 1024 * 1024, // 4.5mb to match vercel limit
-      onError: (c) => {
-        return c.json({ error: 'Body size limit exceeded' }, 413);
-      },
-    })
-  );
-}
+
 
 const authConfig = initAuthConfig((c) => ({
   secret: c.env.AUTH_SECRET || process.env.AUTH_SECRET || 'fallback-secret-for-dev',
@@ -248,10 +246,14 @@ const authConfig = initAuthConfig((c) => ({
               email: email as string,
               name: typeof name === 'string' ? name : undefined,
             });
+            console.log(`[Authorize] Before bcrypt hash...`);
+            const hashedPassword = await bcrypt.hash(password as string, 10);
+            console.log(`[Authorize] After bcrypt hash!`);
+            
             console.log(`[Authorize] Creating account for user: ${newUser.id}`);
             await adapter.linkAccount({
               extraData: {
-                password: await bcrypt.hash(password as string, 10),
+                password: hashedPassword,
               },
               type: 'credentials',
               userId: newUser.id,
