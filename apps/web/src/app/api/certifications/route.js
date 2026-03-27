@@ -3,7 +3,7 @@ import { auth } from "../../../auth.js";
 
 export async function POST(request) {
   try {
-    const session = await auth();
+    const session = await auth(request);
     if (!session?.user?.id) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }

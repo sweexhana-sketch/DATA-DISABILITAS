@@ -3,7 +3,7 @@ import { auth } from "../../../auth.js";
 
 export async function POST(request) {
   try {
-    const session = await auth();
+    const session = await auth(request);
     if (!session?.user?.id) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -68,21 +68,22 @@ export async function POST(request) {
 
     const savedData = result[0];
 
-    // Sync to Google Sheets via Apps Script
+    // Sync to Google Sheets via Apps Script (Non-blocking to avoid Vercel timeouts)
     const appsScriptUrl = process.env.APPS_SCRIPT_URL;
     if (appsScriptUrl) {
-      try {
-        await fetch(appsScriptUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            timestamp: new Date().toISOString(),
-            ...savedData
-          }),
-        });
-      } catch (syncError) {
-        console.error("Failed to sync with Google Sheets:", syncError);
-      }
+      console.log("[Sync] Sending data to Apps Script:", appsScriptUrl);
+      fetch(appsScriptUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          source: "dashboard_submission",
+          timestamp: new Date().toISOString(),
+          user_email: session.user.email,
+          ...savedData
+        }),
+      }).catch(syncError => {
+        console.error("Delayed sync with Google Sheets failed:", syncError);
+      });
     }
 
     return Response.json({ data: savedData });
@@ -97,7 +98,7 @@ export async function POST(request) {
 
 export async function GET(request) {
   try {
-    const session = await auth();
+    const session = await auth(request);
     if (!session?.user?.id) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
