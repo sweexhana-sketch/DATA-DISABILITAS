@@ -10,7 +10,7 @@ import { contextStorage, getContext } from 'hono/context-storage';
 import { cors } from 'hono/cors';
 import { proxy } from 'hono/proxy';
 import { requestId } from 'hono/request-id';
-import { createHonoServer } from 'react-router-hono-server/aws-lambda';
+import { createHonoServer } from 'react-router-hono-server/node';
 import { serializeError } from 'serialize-error';
 import NeonAdapter from './adapter.js';
 import { getHTMLForErrorPage } from './get-html-for-error-page.js';
