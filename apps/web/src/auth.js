@@ -5,7 +5,7 @@
  */
 import CreateAuth from "@auth/create"
 import Credentials from "@auth/core/providers/credentials"
-import { Pool } from '@neondatabase/serverless'
+import { neon } from '@neondatabase/serverless'
 import bcrypt from 'bcryptjs'
 
 function Adapter(client) {
@@ -249,9 +249,12 @@ function Adapter(client) {
     },
   };
 }
-const pool = new Pool({
-      connectionString: process.env.DATABASE_URL,
-    });
+const neonSql = neon(process.env.DATABASE_URL, { fullResults: true });
+const pool = {
+  query: async (queryText, params) => {
+    return neonSql(queryText, params);
+  }
+};
 const adapter = Adapter(pool);
 
 export const { auth } = CreateAuth({
@@ -290,7 +293,7 @@ export const { auth } = CreateAuth({
       return null;
     }
 
-    const isValid = await bcrypt.compare(password, accountPassword);
+    const isValid = bcrypt.compareSync(password, accountPassword);
     if (!isValid) {
       return null;
     }

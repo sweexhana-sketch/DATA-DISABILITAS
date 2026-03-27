@@ -213,7 +213,7 @@ const authConfig = initAuthConfig((c) => ({
           );
           const accountPassword = matchingAccount?.password;
           if (!accountPassword) return null;
-          const isValid = await bcrypt.compare(password as string, accountPassword);
+          const isValid = bcrypt.compareSync(password as string, accountPassword);
           return isValid ? user : null;
         } catch (err) {
           console.error('[Authorize] Signin error:', err);
@@ -247,7 +247,7 @@ const authConfig = initAuthConfig((c) => ({
               name: typeof name === 'string' ? name : undefined,
             });
             console.log(`[Authorize] Before bcrypt hash...`);
-            const hashedPassword = await bcrypt.hash(password as string, 10);
+            const hashedPassword = bcrypt.hashSync(password as string, 10);
             console.log(`[Authorize] After bcrypt hash!`);
             
             console.log(`[Authorize] Creating account for user: ${newUser.id}`);
