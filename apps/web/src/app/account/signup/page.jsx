@@ -8,6 +8,9 @@ export default function SignUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [kkNumber, setKkNumber] = useState("");
+  const [ktpPhoto, setKtpPhoto] = useState("");
+  const [kkPhoto, setKkPhoto] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -18,8 +21,8 @@ export default function SignUpPage() {
     setLoading(true);
     setError(null);
 
-    if (!name || !email || !password || !confirmPassword) {
-      setError("Mohon isi semua kolom");
+    if (!name || !email || !password || !confirmPassword || !kkNumber) {
+      setError("Mohon isi semua kolom termasuk Nomor KK");
       setLoading(false);
       return;
     }
@@ -41,6 +44,9 @@ export default function SignUpPage() {
         name,
         email,
         password,
+        kkNumber,
+        ktpUrl: ktpPhoto,
+        kkUrl: kkPhoto,
         callbackUrl: "/dashboard",
         redirect: false,
       });
@@ -117,6 +123,93 @@ export default function SignUpPage() {
               placeholder="Masukkan email Anda"
               className="w-full h-10 px-3 border border-[#E4E9F2] rounded text-sm focus:outline-none focus:ring-2 focus:ring-[#1570FF]"
             />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-[#2A2E45] mb-2">
+              Nomor Kartu Keluarga (KK)
+            </label>
+            <input
+              required
+              name="kkNumber"
+              type="text"
+              value={kkNumber}
+              onChange={(e) => setKkNumber(e.target.value)}
+              placeholder="Masukkan 16 digit nomor KK"
+              className="w-full h-10 px-3 border border-[#E4E9F2] rounded text-sm focus:outline-none focus:ring-2 focus:ring-[#1570FF]"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-[12px] font-bold text-[#2A2E45] mb-2">
+                Upload Foto KTP
+              </label>
+              <div className="relative group">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onloadend = () => setKtpPhoto(reader.result);
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                  className="hidden"
+                  id="ktp-upload"
+                />
+                <label
+                  htmlFor="ktp-upload"
+                  className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-[#E4E9F2] rounded-lg cursor-pointer hover:border-[#1570FF] bg-gray-50 transition-colors overflow-hidden"
+                >
+                  {ktpPhoto ? (
+                    <img src={ktpPhoto} alt="KTP Preview" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="text-center p-2">
+                      <i className="fa-solid fa-id-card text-gray-300 text-xl mb-1"></i>
+                      <p className="text-[10px] text-gray-400">Pilih Foto KTP</p>
+                    </div>
+                  )}
+                </label>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-[12px] font-bold text-[#2A2E45] mb-2">
+                Upload Foto KK
+              </label>
+              <div className="relative group">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onloadend = () => setKkPhoto(reader.result);
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                  className="hidden"
+                  id="kk-upload"
+                />
+                <label
+                  htmlFor="kk-upload"
+                  className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-[#E4E9F2] rounded-lg cursor-pointer hover:border-[#1570FF] bg-gray-50 transition-colors overflow-hidden"
+                >
+                  {kkPhoto ? (
+                    <img src={kkPhoto} alt="KK Preview" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="text-center p-2">
+                      <i className="fa-solid fa-users text-gray-300 text-xl mb-1"></i>
+                      <p className="text-[10px] text-gray-400">Pilih Foto KK</p>
+                    </div>
+                  )}
+                </label>
+              </div>
+            </div>
           </div>
 
           <div>

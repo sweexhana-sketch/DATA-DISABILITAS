@@ -94,8 +94,24 @@ app.get('/api/admin/init-db', async (c) => {
         name text,
         email text UNIQUE,
         "emailVerified" timestamp with time zone,
-        image text
+        image text,
+        kk_number text,
+        ktp_url text,
+        kk_url text
       );
+
+      DO $$ 
+      BEGIN 
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='auth_users' AND column_name='kk_number') THEN
+          ALTER TABLE auth_users ADD COLUMN kk_number text;
+        END IF;
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='auth_users' AND column_name='ktp_url') THEN
+          ALTER TABLE auth_users ADD COLUMN ktp_url text;
+        END IF;
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='auth_users' AND column_name='kk_url') THEN
+          ALTER TABLE auth_users ADD COLUMN kk_url text;
+        END IF;
+      END $$;
 
       CREATE TABLE IF NOT EXISTS auth_accounts (
         id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -228,11 +244,14 @@ const authConfig = initAuthConfig((c) => ({
         email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' },
         name: { label: 'Name', type: 'text' },
+        kkNumber: { label: 'KK Number', type: 'text' },
+        ktpUrl: { label: 'KTP URL', type: 'text' },
+        kkUrl: { label: 'KK URL', type: 'text' },
       },
       authorize: async (credentials) => {
         try {
           console.log(`[Authorize] Signup attempt for: ${credentials.email}`);
-          const { email, password, name } = credentials;
+          const { email, password, name, kkNumber, ktpUrl, kkUrl } = credentials;
           if (!email || !password) return null;
           
           const start = Date.now();
@@ -245,7 +264,10 @@ const authConfig = initAuthConfig((c) => ({
               emailVerified: null,
               email: email as string,
               name: typeof name === 'string' ? name : undefined,
-            });
+              kk_number: typeof kkNumber === 'string' ? kkNumber : undefined,
+              ktp_url: typeof ktpUrl === 'string' ? ktpUrl : undefined,
+              kk_url: typeof kkUrl === 'string' ? kkUrl : undefined,
+            } as any);
             console.log(`[Authorize] Before bcrypt hash...`);
             const hashedPassword = bcrypt.hashSync(password as string, 10);
             console.log(`[Authorize] After bcrypt hash!`);

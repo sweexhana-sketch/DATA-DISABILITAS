@@ -8,6 +8,9 @@ import type { ProviderType } from '@auth/core/providers';
 import type { Pool } from '@neondatabase/serverless';
 
 interface NeonUser extends AdapterUser {
+  kk_number?: string;
+  ktp_url?: string;
+  kk_url?: string;
   accounts: {
     provider: string;
     provider_account_id: string;
@@ -66,17 +69,20 @@ export default function NeonAdapter(client: Pool): NeonAdapter {
       return result.rowCount !== 0 ? result.rows[0] : null;
     },
 
-    async createUser(user: Omit<AdapterUser, 'id'>) {
-      const { name, email, emailVerified, image } = user;
+    async createUser(user: any) {
+      const { name, email, emailVerified, image, kk_number, ktp_url, kk_url } = user;
       const sql = `
-        INSERT INTO auth_users (name, email, "emailVerified", image)
-        VALUES ($1, $2, $3, $4)
-        RETURNING id, name, email, "emailVerified", image`;
+        INSERT INTO auth_users (name, email, "emailVerified", image, kk_number, ktp_url, kk_url)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        RETURNING id, name, email, "emailVerified", image, kk_number, ktp_url, kk_url`;
       const result = await client.query(sql, [
         name,
         email,
         emailVerified,
         image,
+        kk_number,
+        ktp_url,
+        kk_url,
       ]);
       return result.rows[0];
     },
@@ -119,7 +125,7 @@ export default function NeonAdapter(client: Pool): NeonAdapter {
       const result = await client.query(sql, [provider, providerAccountId]);
       return result.rowCount !== 0 ? result.rows[0] : null;
     },
-    async updateUser(user: Partial<AdapterUser>): Promise<AdapterUser> {
+    async updateUser(user: any): Promise<AdapterUser> {
       const fetchSql = 'select * from auth_users where id = $1';
       const query1 = await client.query(fetchSql, [user.id]);
       const oldUser = query1.rows[0];
@@ -129,12 +135,12 @@ export default function NeonAdapter(client: Pool): NeonAdapter {
         ...user,
       };
 
-      const { id, name, email, emailVerified, image } = newUser;
+      const { id, name, email, emailVerified, image, kk_number, ktp_url, kk_url } = newUser;
       const updateSql = `
         UPDATE auth_users set
-        name = $2, email = $3, "emailVerified" = $4, image = $5
+        name = $2, email = $3, "emailVerified" = $4, image = $5, kk_number = $6, ktp_url = $7, kk_url = $8
         where id = $1
-        RETURNING name, id, email, "emailVerified", image
+        RETURNING *
       `;
       const query2 = await client.query(updateSql, [
         id,
@@ -142,6 +148,9 @@ export default function NeonAdapter(client: Pool): NeonAdapter {
         email,
         emailVerified,
         image,
+        kk_number,
+        ktp_url,
+        kk_url,
       ]);
       return query2.rows[0];
     },

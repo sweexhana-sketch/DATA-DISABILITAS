@@ -508,6 +508,16 @@ export function Layout({ children }: { children: ReactNode }) {
                 <span>Daftar Data</span>
               </button>
             </nav>
+
+            <div className="mt-auto p-4 border-t border-gray-50">
+              <button
+                onClick={() => navigate('/account/logout')}
+                className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-red-500 hover:bg-red-50 transition-colors"
+              >
+                <i className="fa-solid fa-right-from-bracket w-5"></i>
+                <span>Keluar</span>
+              </button>
+            </div>
           </aside>
 
           {/* Main Content */}
