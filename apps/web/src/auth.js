@@ -6,7 +6,7 @@
 import CreateAuth from "@auth/create"
 import Credentials from "@auth/core/providers/credentials"
 import { Pool } from '@neondatabase/serverless'
-import { hash, verify } from 'argon2'
+import bcrypt from 'bcryptjs'
 
 function Adapter(client) {
   return {
@@ -290,7 +290,7 @@ export const { auth } = CreateAuth({
       return null;
     }
 
-    const isValid = await verify(accountPassword, password);
+    const isValid = await bcrypt.compare(password, accountPassword);
     if (!isValid) {
       return null;
     }
@@ -341,7 +341,7 @@ export const { auth } = CreateAuth({
       });
       await adapter.linkAccount({
         extraData: {
-          password: await hash(password),
+          password: await bcrypt.hash(password, 10),
         },
         type: 'credentials',
         userId: newUser.id,

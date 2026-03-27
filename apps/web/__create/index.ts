@@ -13,11 +13,11 @@ import { bodyLimit } from 'hono/body-limit';
 import { requestId } from 'hono/request-id';
 import { createHonoServer } from 'react-router-hono-server/aws-lambda';
 import { serializeError } from 'serialize-error';
-import ws from 'ws';
 import NeonAdapter from './adapter.js';
 import { getHTMLForErrorPage } from './get-html-for-error-page.js';
 import { API_BASENAME, api } from './route-builder.js';
-neonConfig.webSocketConstructor = ws;
+// Use HTTP fetch mode for Vercel serverless (no WebSocket overhead)
+neonConfig.fetchConnectionCache = true;
 
 const als = new AsyncLocalStorage<{ requestId: string }>();
 
