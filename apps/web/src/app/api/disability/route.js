@@ -17,14 +17,20 @@ export async function POST(request) {
       gender,
       regency,
       disability_type,
+      severity,
+      alat_bantu,
+      status_layanan,
+      catatan_layanan,
       phone,
       address,
+      latitude,
+      longitude,
       kk_number,
       ktp_url,
       kk_url,
     } = body;
 
-    // Create table if not exists (simplified for this environment)
+    // Ensure table exists and all columns are present (idempotent migrations)
     try {
       await sql`
         CREATE TABLE IF NOT EXISTS disability_data (
@@ -45,30 +51,47 @@ export async function POST(request) {
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
       `;
-
-      // Migrations for existing tables
-      await sql`ALTER TABLE disability_data ADD COLUMN IF NOT EXISTS kk_number TEXT`;
-      await sql`ALTER TABLE disability_data ADD COLUMN IF NOT EXISTS ktp_url TEXT`;
-      await sql`ALTER TABLE disability_data ADD COLUMN IF NOT EXISTS kk_url TEXT`;
+      // Migrations - add new columns if they don't exist
+      const migrations = [
+        sql`ALTER TABLE disability_data ADD COLUMN IF NOT EXISTS kk_number TEXT`,
+        sql`ALTER TABLE disability_data ADD COLUMN IF NOT EXISTS ktp_url TEXT`,
+        sql`ALTER TABLE disability_data ADD COLUMN IF NOT EXISTS kk_url TEXT`,
+        sql`ALTER TABLE disability_data ADD COLUMN IF NOT EXISTS severity TEXT`,
+        sql`ALTER TABLE disability_data ADD COLUMN IF NOT EXISTS alat_bantu TEXT`,
+        sql`ALTER TABLE disability_data ADD COLUMN IF NOT EXISTS status_layanan TEXT DEFAULT 'Belum Terjangkau'`,
+        sql`ALTER TABLE disability_data ADD COLUMN IF NOT EXISTS catatan_layanan TEXT`,
+        sql`ALTER TABLE disability_data ADD COLUMN IF NOT EXISTS latitude TEXT`,
+        sql`ALTER TABLE disability_data ADD COLUMN IF NOT EXISTS longitude TEXT`,
+      ];
+      await Promise.allSettled(migrations);
     } catch (e) {
-      console.error("Error creating/altering table:", e);
+      console.error("Error during table setup:", e);
     }
 
     // Save to database
     const result = await sql`
       INSERT INTO disability_data (
-        user_id, nik, full_name, birth_place, birth_date, gender, 
-        regency, disability_type, phone, address, kk_number, ktp_url, kk_url
+        user_id, nik, full_name, birth_place, birth_date, gender,
+        regency, disability_type, severity, alat_bantu, status_layanan,
+        catatan_layanan, phone, address, latitude, longitude,
+        kk_number, ktp_url, kk_url
       ) VALUES (
-        ${session.user.id}, ${nik}, ${full_name}, ${birth_place || null}, ${birth_date || null},
-        ${gender}, ${regency}, ${disability_type}, ${phone || null}, ${address},
+        ${session.user.id}, ${nik}, ${full_name},
+        ${birth_place || null}, ${birth_date || null},
+        ${gender}, ${regency}, ${disability_type},
+        ${severity || 'Ringan (Dapat Mandiri)'},
+        ${alat_bantu || null},
+        ${status_layanan || 'Belum Terjangkau'},
+        ${catatan_layanan || null},
+        ${phone || null}, ${address},
+        ${latitude || null}, ${longitude || null},
         ${kk_number || null}, ${ktp_url || null}, ${kk_url || null}
       ) RETURNING *
     `;
 
     const savedData = result[0];
 
-    // Sync to Google Sheets via Apps Script (Non-blocking to avoid Vercel timeouts)
+    // Non-blocking sync to Google Apps Script
     const appsScriptUrl = process.env.APPS_SCRIPT_URL;
     if (appsScriptUrl) {
       console.log("[Sync] Sending data to Apps Script:", appsScriptUrl);
@@ -76,7 +99,8 @@ export async function POST(request) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          source: "dashboard_submission",
+          source: "sip_dis_dashboard",
+          provinsi: "Papua Barat Daya",
           timestamp: new Date().toISOString(),
           user_email: session.user.email,
           ...savedData
@@ -89,10 +113,10 @@ export async function POST(request) {
     return Response.json({ data: savedData });
   } catch (error) {
     console.error("Error saving disability data:", error);
-    if (error.code === '23505') { // Unique violation
-        return Response.json({ error: "NIK sudah terdaftar" }, { status: 400 });
+    if (error.code === '23505') {
+      return Response.json({ error: "NIK sudah terdaftar" }, { status: 400 });
     }
-    return Response.json({ error: "Internal Server Error" }, { status: 500 });
+    return Response.json({ error: "Internal Server Error", details: error.message }, { status: 500 });
   }
 }
 
