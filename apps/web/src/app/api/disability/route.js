@@ -19,6 +19,9 @@ export async function POST(request) {
       disability_type,
       phone,
       address,
+      kk_number,
+      ktp_url,
+      kk_url,
     } = body;
 
     // Create table if not exists (simplified for this environment)
@@ -36,21 +39,30 @@ export async function POST(request) {
           disability_type TEXT,
           phone TEXT,
           address TEXT,
+          kk_number TEXT,
+          ktp_url TEXT,
+          kk_url TEXT,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
       `;
+
+      // Migrations for existing tables
+      await sql`ALTER TABLE disability_data ADD COLUMN IF NOT EXISTS kk_number TEXT`;
+      await sql`ALTER TABLE disability_data ADD COLUMN IF NOT EXISTS ktp_url TEXT`;
+      await sql`ALTER TABLE disability_data ADD COLUMN IF NOT EXISTS kk_url TEXT`;
     } catch (e) {
-      console.error("Error creating table:", e);
+      console.error("Error creating/altering table:", e);
     }
 
     // Save to database
     const result = await sql`
       INSERT INTO disability_data (
         user_id, nik, full_name, birth_place, birth_date, gender, 
-        regency, disability_type, phone, address
+        regency, disability_type, phone, address, kk_number, ktp_url, kk_url
       ) VALUES (
         ${session.user.id}, ${nik}, ${full_name}, ${birth_place || null}, ${birth_date || null},
-        ${gender}, ${regency}, ${disability_type}, ${phone || null}, ${address}
+        ${gender}, ${regency}, ${disability_type}, ${phone || null}, ${address},
+        ${kk_number || null}, ${ktp_url || null}, ${kk_url || null}
       ) RETURNING *
     `;
 

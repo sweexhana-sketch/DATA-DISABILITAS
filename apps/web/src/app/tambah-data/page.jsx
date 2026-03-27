@@ -18,6 +18,9 @@ export default function DisabilityRegisterPage() {
   const [disabilityType, setDisabilityType] = useState("Disabilitas Fisik");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+  const [kkNumber, setKkNumber] = useState("");
+  const [ktpPhoto, setKtpPhoto] = useState("");
+  const [kkPhoto, setKkPhoto] = useState("");
 
   useEffect(() => {
     if (!userLoading && !user) {
@@ -42,6 +45,9 @@ export default function DisabilityRegisterPage() {
         disability_type: disabilityType,
         phone,
         address,
+        kk_number: kkNumber,
+        ktp_url: ktpPhoto,
+        kk_url: kkPhoto,
       };
 
       const res = await fetch("/api/disability", {
@@ -64,6 +70,9 @@ export default function DisabilityRegisterPage() {
       setBirthDate("");
       setPhone("");
       setAddress("");
+      setKkNumber("");
+      setKtpPhoto("");
+      setKkPhoto("");
       
     } catch (err) {
       setError(err.message);
@@ -106,6 +115,20 @@ export default function DisabilityRegisterPage() {
                 value={nik}
                 onChange={(e) => setNik(e.target.value)}
                 placeholder="33xxxxxxxxxxxxxx"
+                required
+                maxLength={16}
+                className="w-full h-12 px-4 bg-gray-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-blue-500 transition-all shadow-inner"
+              />
+            </div>
+
+            {/* Nomor KK */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">Nomor Kartu Keluarga (KK)</label>
+              <input
+                type="text"
+                value={kkNumber}
+                onChange={(e) => setKkNumber(e.target.value)}
+                placeholder="Masukkan 16 digit nomor KK"
                 required
                 maxLength={16}
                 className="w-full h-12 px-4 bg-gray-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-blue-500 transition-all shadow-inner"
@@ -202,6 +225,78 @@ export default function DisabilityRegisterPage() {
                 rows={4}
                 className="w-full px-4 py-3 bg-gray-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-blue-500 transition-all shadow-inner"
               />
+            </div>
+
+            {/* Upload KTP */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700 font-bold">Upload Foto KTP</label>
+              <div className="relative group">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onloadend = () => setKtpPhoto(reader.result);
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                  className="hidden"
+                  id="ktp-upload-dash"
+                />
+                <label
+                  htmlFor="ktp-upload-dash"
+                  className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-200 rounded-2xl cursor-pointer hover:border-blue-500 bg-gray-50 transition-all overflow-hidden"
+                >
+                  {ktpPhoto ? (
+                    <img src={ktpPhoto} alt="KTP Preview" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="text-center group-hover:scale-110 transition-transform">
+                      <div className="w-12 h-12 bg-white rounded-full shadow-sm flex items-center justify-center mx-auto mb-2">
+                        <i className="fa-solid fa-id-card text-blue-500 text-xl"></i>
+                      </div>
+                      <p className="text-[12px] text-gray-500 font-medium">Klik untuk Pilih Foto KTP</p>
+                    </div>
+                  )}
+                </label>
+              </div>
+            </div>
+
+            {/* Upload KK */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700 font-bold">Upload Foto KK</label>
+              <div className="relative group">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onloadend = () => setKkPhoto(reader.result);
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                  className="hidden"
+                  id="kk-upload-dash"
+                />
+                <label
+                  htmlFor="kk-upload-dash"
+                  className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-200 rounded-2xl cursor-pointer hover:border-blue-500 bg-gray-50 transition-all overflow-hidden"
+                >
+                  {kkPhoto ? (
+                    <img src={kkPhoto} alt="KK Preview" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="text-center group-hover:scale-110 transition-transform">
+                      <div className="w-12 h-12 bg-white rounded-full shadow-sm flex items-center justify-center mx-auto mb-2">
+                        <i className="fa-solid fa-users text-blue-500 text-xl"></i>
+                      </div>
+                      <p className="text-[12px] text-gray-500 font-medium">Klik untuk Pilih Foto KK</p>
+                    </div>
+                  )}
+                </label>
+              </div>
             </div>
           </div>
 
