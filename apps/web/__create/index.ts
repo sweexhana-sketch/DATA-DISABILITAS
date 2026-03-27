@@ -98,12 +98,14 @@ app.get('/api/admin/init-db', async (c) => {
         kk_number text,
         ktp_url text,
         kk_url text
-      );
+      )
+    `);
 
-      ALTER TABLE auth_users ADD COLUMN IF NOT EXISTS kk_number text;
-      ALTER TABLE auth_users ADD COLUMN IF NOT EXISTS ktp_url text;
-      ALTER TABLE auth_users ADD COLUMN IF NOT EXISTS kk_url text;
+    await pool.query('ALTER TABLE auth_users ADD COLUMN IF NOT EXISTS kk_number text');
+    await pool.query('ALTER TABLE auth_users ADD COLUMN IF NOT EXISTS ktp_url text');
+    await pool.query('ALTER TABLE auth_users ADD COLUMN IF NOT EXISTS kk_url text');
 
+    await pool.query(`
       CREATE TABLE IF NOT EXISTS auth_accounts (
         id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
         "userId" uuid REFERENCES auth_users(id) ON DELETE CASCADE,
@@ -119,21 +121,25 @@ app.get('/api/admin/init-db', async (c) => {
         session_state text,
         password text,
         UNIQUE(provider, "providerAccountId")
-      );
+      )
+    `);
 
+    await pool.query(`
       CREATE TABLE IF NOT EXISTS auth_sessions (
         id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
         expires timestamp with time zone NOT NULL,
         "sessionToken" text UNIQUE NOT NULL,
         "userId" uuid REFERENCES auth_users(id) ON DELETE CASCADE
-      );
+      )
+    `);
 
+    await pool.query(`
       CREATE TABLE IF NOT EXISTS auth_verification_token (
         identifier text NOT NULL,
         token text NOT NULL,
         expires timestamp with time zone NOT NULL,
         PRIMARY KEY (identifier, token)
-      );
+      )
     `);
     
     return c.json({ status: 'success', message: 'Auth tables initialized successfully' });
