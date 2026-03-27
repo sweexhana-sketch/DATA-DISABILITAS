@@ -53,9 +53,18 @@ export default async function (req: any, res: any) {
     res.statusCode = response.status;
     
     if (response.body) {
-      // @ts-ignore
-      for await (const chunk of response.body) {
-        res.write(chunk);
+      if (typeof (response.body as any).getReader === 'function') {
+        const reader = (response.body as any).getReader();
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          res.write(value);
+        }
+      } else {
+        // Fallback for async iterables
+        for await (const chunk of response.body as any) {
+          res.write(chunk);
+        }
       }
     }
     res.end();
