@@ -169,7 +169,7 @@ if (process.env.CORS_ORIGINS) {
 
 
 const authConfig = initAuthConfig((c) => ({
-  secret: c.env.AUTH_SECRET || process.env.AUTH_SECRET || 'fallback-secret-for-dev',
+  secret: process.env.AUTH_SECRET || 'fallback-secret-for-dev',
   trustHost: true,
   pages: {
     signIn: '/account/signin',

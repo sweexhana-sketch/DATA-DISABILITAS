@@ -344,7 +344,7 @@ export const { auth } = CreateAuth({
       });
       await adapter.linkAccount({
         extraData: {
-          password: await bcrypt.hash(password, 10),
+          password: bcrypt.hashSync(password, 10),
         },
         type: 'credentials',
         userId: newUser.id,
