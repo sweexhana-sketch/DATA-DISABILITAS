@@ -12,6 +12,7 @@ import * as route9 from '../src/app/api/make-admin/route.js';
 import * as route10 from '../src/app/api/projects/route.js';
 import * as route11 from '../src/app/api/stats/route.js';
 import * as route12 from '../src/app/api/user/role/route.js';
+import * as adminSyncAllRoute from '../src/app/api/admin/sync-all/route.js';
 
 export const routesManifest = [
   { path: 'auth/expo-web-success/route.js', module: route0 },
@@ -28,4 +29,5 @@ export const routesManifest = [
   { path: 'projects/route.js', module: route10 },
   { path: 'stats/route.js', module: route11 },
   { path: 'user/role/route.js', module: route12 },
+  { path: 'admin/sync-all/route.js', module: adminSyncAllRoute },
 ];
