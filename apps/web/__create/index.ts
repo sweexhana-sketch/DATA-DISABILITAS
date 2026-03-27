@@ -100,18 +100,9 @@ app.get('/api/admin/init-db', async (c) => {
         kk_url text
       );
 
-      DO $$ 
-      BEGIN 
-        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='auth_users' AND column_name='kk_number') THEN
-          ALTER TABLE auth_users ADD COLUMN kk_number text;
-        END IF;
-        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='auth_users' AND column_name='ktp_url') THEN
-          ALTER TABLE auth_users ADD COLUMN ktp_url text;
-        END IF;
-        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='auth_users' AND column_name='kk_url') THEN
-          ALTER TABLE auth_users ADD COLUMN kk_url text;
-        END IF;
-      END $$;
+      ALTER TABLE auth_users ADD COLUMN IF NOT EXISTS kk_number text;
+      ALTER TABLE auth_users ADD COLUMN IF NOT EXISTS ktp_url text;
+      ALTER TABLE auth_users ADD COLUMN IF NOT EXISTS kk_url text;
 
       CREATE TABLE IF NOT EXISTS auth_accounts (
         id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
