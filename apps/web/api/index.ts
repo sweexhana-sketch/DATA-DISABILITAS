@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { app } from '../build/server/index.js'
 
 export const config = {

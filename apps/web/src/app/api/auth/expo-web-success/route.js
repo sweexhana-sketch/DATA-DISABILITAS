@@ -4,13 +4,13 @@ export async function GET(request) {
 		getToken({
 			req: request,
 			secret: process.env.AUTH_SECRET,
-			secureCookie: process.env.AUTH_URL.startsWith('https'),
+			secureCookie: process.env.AUTH_URL ? process.env.AUTH_URL.startsWith('https') : process.env.VERCEL === '1' || process.env.NODE_ENV === 'production',
 			raw: true,
 		}),
 		getToken({
 			req: request,
 			secret: process.env.AUTH_SECRET,
-			secureCookie: process.env.AUTH_URL.startsWith('https'),
+			secureCookie: process.env.AUTH_URL ? process.env.AUTH_URL.startsWith('https') : process.env.VERCEL === '1' || process.env.NODE_ENV === 'production',
 		}),
 	]);
 
