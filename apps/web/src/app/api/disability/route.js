@@ -91,23 +91,25 @@ export async function POST(request) {
 
     const savedData = result[0];
 
-    // Non-blocking sync to Google Apps Script
+    // Sync to Google Apps Script (Must be awaited in Vercel Serverless environment to prevent freezing)
     const appsScriptUrl = process.env.APPS_SCRIPT_URL;
     if (appsScriptUrl) {
       console.log("[Sync] Sending data to Apps Script:", appsScriptUrl);
-      fetch(appsScriptUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          source: "sip_dis_dashboard",
-          provinsi: "Papua Barat Daya",
-          timestamp: new Date().toISOString(),
-          user_email: session.user.email,
-          ...savedData
-        }),
-      }).catch(syncError => {
-        console.error("Delayed sync with Google Sheets failed:", syncError);
-      });
+      try {
+        await fetch(appsScriptUrl, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" }, // Gunakan text/plain untuk menghindari preflight CORS
+          body: JSON.stringify({
+            source: "sip_dis_dashboard",
+            provinsi: "Papua Barat Daya",
+            timestamp: new Date().toISOString(),
+            user_email: session.user.email,
+            ...savedData
+          }),
+        });
+      } catch (syncError) {
+        console.error("Sync with Google Sheets failed:", syncError);
+      }
     }
 
     return Response.json({ data: savedData });
